@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Surpresa 💙</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app" role="application">
+    <header class="headline">
+      <h1>Nosso cantinho de memórias💫</h1>
+      <!-- <p>Um carrossel de memórias, com música e um contador do nosso amor.</p>-->
+    </header>
+
+    <section class="carousel" aria-label="Carrossel de fotos" aria-live="polite">
+      <div class="slides" id="slides"></div>
+      <div class="caption">
+        <div class="legend" id="legend">—</div>
+        <div class="counter" id="counter">0 meses e 0 dias</div>
+      </div>
+
+      <div class="controls" aria-hidden="false">
+        <button class="btn" aria-label="Anterior" id="prev" title="Anterior">◀</button>
+        <button class="btn" aria-label="Próxima" id="next" title="Próxima">▶</button>
+        <div class="dots" id="dots" aria-hidden="false"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Overlay para iniciar áudio (autoplay policy) -->
+  <div class="overlay" id="overlay">
+    <div class="card-start">
+      <h2>Pronta para começar?</h2>
+      <!-- <p>Toque em “Começar” para iniciar a experiência com música.</p>-->
+      <button class="cta" id="startBtn" type="button" aria-label="Começar a experiência">▶ Começar</button>
+    </div>
+  </div>
+
+  <!-- Contêiner invisível para o player do YouTube -->
+  <div id="yt-player" aria-hidden="true" style="position:fixed;width:0;height:0;overflow:hidden;"></div>
+
+  <script src="js/music.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
