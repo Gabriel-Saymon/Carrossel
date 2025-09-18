@@ -1,4 +1,4 @@
-# Surpresa 💙
+# Surpresa 
 
 Mini-projeto com **carrossel responsivo**, **contador de meses & dias** e **música (YouTube)**.
 
