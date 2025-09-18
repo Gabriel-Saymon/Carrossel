@@ -1,0 +1,271 @@
+/* --- Configuração Global e Variáveis --- */
+:root {
+    /* Paleta de Cores */
+    --bg-1: #0a1b2e;
+    --bg-2: #071220;
+    --text: #eaf2ff;
+    --muted: #a9b6ca;
+    --accent: #7db3ff;
+    --accent-2: #ff9ecf;
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    --glass-bg: rgba(26, 43, 65, 0.5);
+
+    /* Tipografia */
+    --font-family: 'Poppins', sans-serif;
+
+    /* Dimensões do Carrossel */
+    --frame-max-width: 680px;
+    --frame-height: clamp(340px, 70vh, 760px);
+    --image-position: 50% 50%; /* Padrão, pode ser sobrescrito por foto */
+    
+    /* Animações */
+    --transition-speed: 0.5s;
+}
+
+/* --- Reset Básico e Estilo do Body --- */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-family);
+    background-image: linear-gradient(145deg, var(--bg-1), var(--bg-2));
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 1rem;
+    overflow-x: hidden;
+}
+
+/* --- Estrutura Principal --- */
+main {
+    width: 100%;
+    max-width: var(--frame-max-width);
+    text-align: center;
+}
+
+header {
+    margin-bottom: 2rem;
+}
+
+header h1 {
+    font-weight: 600;
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    color: var(--accent-2);
+}
+
+header p {
+    font-weight: 300;
+    font-size: clamp(1rem, 3vw, 1.2rem);
+    color: var(--muted);
+}
+
+/* --- Contêiner do Carrossel --- */
+.carousel-container {
+    position: relative;
+}
+
+.carousel {
+    position: relative;
+    width: 100%;
+    height: var(--frame-height);
+    margin: 0 auto;
+}
+
+#slides-wrapper {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 16px;
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px 0 var(--shadow-color);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#slides {
+    display: flex;
+    height: 100%;
+    position: relative;
+}
+
+.slide {
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity var(--transition-speed) ease-in-out, transform var(--transition-speed) ease-in-out;
+}
+
+.slide.active {
+    opacity: 1;
+    transform: scale(1);
+    z-index: 1;
+}
+
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Requisito principal: SEM CORTES */
+    object-position: var(--image-position);
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* --- Controles do Carrossel (Setas e Dots) --- */
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    background-color: var(--glass-bg);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text);
+    font-size: 2rem;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s, transform 0.3s;
+    -webkit-tap-highlight-color: transparent; /* Remove highlight em mobile */
+}
+
+.carousel-btn:hover, .carousel-btn:focus-visible {
+    background-color: rgba(43, 67, 99, 0.8);
+    transform: translateY(-50%) scale(1.1);
+    outline: 2px solid var(--accent);
+}
+
+#prev {
+    left: 10px;
+}
+
+#next {
+    right: 10px;
+}
+
+.dots-nav {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 2;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: var(--glass-bg);
+    border: 1px solid var(--muted);
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.dot.active {
+    background-color: var(--accent);
+    border-color: var(--accent);
+    transform: scale(1.2);
+}
+
+/* --- Legenda e Contador --- */
+.caption-container {
+    margin-top: 1.5rem;
+    padding: 0 1rem;
+}
+
+.legend {
+    font-size: 1.1rem;
+    color: var(--text);
+    min-height: 1.5em; /* Evita pulos de layout */
+}
+
+.counter {
+    margin-top: 0.5rem;
+    font-size: 1rem;
+    color: var(--accent-2);
+    font-weight: 300;
+}
+
+/* --- Overlay Inicial --- */
+#overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    transition: opacity 0.5s ease-out;
+}
+
+#start-btn {
+    font-family: var(--font-family);
+    font-size: 1.5rem;
+    font-weight: 600;
+    padding: 1rem 2.5rem;
+    border-radius: 50px;
+    border: 2px solid var(--accent-2);
+    background-color: transparent;
+    color: var(--accent-2);
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s, transform 0.3s;
+}
+
+#start-btn:hover, #start-btn:focus-visible {
+    background-color: var(--accent-2);
+    color: var(--bg-1);
+    transform: scale(1.05);
+    outline: none;
+}
+
+#overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* --- Acessibilidade --- */
+@media (prefers-reduced-motion: reduce) {
+    .slide, .carousel-btn, .dot, #start-btn, #overlay {
+        transition: none;
+    }
+}
+
+/* --- Responsividade --- */
+@media (max-width: 600px) {
+    body {
+        padding: 1rem 0.5rem;
+    }
+
+    .carousel-btn {
+        width: 38px;
+        height: 38px;
+        font-size: 1.5rem;
+    }
+    #prev { left: 5px; }
+    #next { right: 5px; }
+
+    .dots-nav {
+        bottom: 10px;
+        gap: 8px;
+    }
+    .dot {
+        width: 10px;
+        height: 10px;
+    }
+}
