@@ -52,6 +52,9 @@ function startMusicLoop() {
         return;
     }
 
+    // --- ADICIONE ESTA LINHA ---
+    player.unMute(); // Garante que o áudio seja "desbloqueado"
+
     // Inicia a música no ponto definido
     player.seekTo(START_SECONDS, true);
     player.playVideo();
@@ -66,7 +69,7 @@ function startMusicLoop() {
         if (player.getCurrentTime() >= END_SECONDS) {
             player.seekTo(START_SECONDS, true);
         }
-    }, 500); // Verifica a cada meio segundo
+    }, 500);
 }
 
 /**
