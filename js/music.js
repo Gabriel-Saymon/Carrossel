@@ -1,4 +1,4 @@
-// js/music.js
+// js/music.js (Versão Corrigida para Celular)
 
 // --- Configuração da Música ---
 const YOUTUBE_VIDEO_ID = 'uuZE_IRwLNI'; // Justin Timberlake - Mirrors
@@ -21,11 +21,12 @@ function onYouTubeIframeAPIReady() {
         width: '0',
         videoId: YOUTUBE_VIDEO_ID,
         playerVars: {
-            'autoplay': 0, // Autoplay desativado por padrão
-            'controls': 0, // Sem controles
+            'autoplay': 0,
+            'controls': 0,
             'showinfo': 0,
             'rel': 0,
-            'modestbranding': 1
+            'modestbranding': 1,
+            'playsinline': 1 // Essencial para alguns navegadores móveis
         },
         events: {
             'onReady': onPlayerReady,
@@ -38,7 +39,10 @@ function onYouTubeIframeAPIReady() {
  * @param {object} event - Evento da API do YouTube.
  */
 function onPlayerReady(event) {
-    // O player está pronto, mas aguardando interação do usuário.
+    // Prepara o player para o celular, deixando-o mudo inicialmente.
+    event.target.mute();
+    
+    // O player está pronto, aguardando interação do usuário.
     startBtn.disabled = false;
     startBtn.textContent = 'Começar';
 }
@@ -52,9 +56,9 @@ function startMusicLoop() {
         return;
     }
 
-    // --- ADICIONE ESTA LINHA ---
-    player.unMute(); // Garante que o áudio seja "desbloqueado"
-
+    // Reativa o som antes de tocar (o passo chave para funcionar no celular)
+    player.unMute();
+    
     // Inicia a música no ponto definido
     player.seekTo(START_SECONDS, true);
     player.playVideo();
@@ -69,7 +73,7 @@ function startMusicLoop() {
         if (player.getCurrentTime() >= END_SECONDS) {
             player.seekTo(START_SECONDS, true);
         }
-    }, 500);
+    }, 500); // Verifica a cada meio segundo
 }
 
 /**

@@ -16,19 +16,18 @@ document.addEventListener('DOMContentLoaded', () => {
         { src: 'assets/img-5.jpeg', alt: 'Descrição da foto 5', caption: 'O que dizer desse dia...' },
         { src: 'assets/img-6.jpeg', alt: 'Descrição da foto 6', caption: 'Que nem passarinhos.' },
         { src: 'assets/img-7.jpeg', alt: 'Descrição da foto 7', caption: 'Que gatos.' },
-        { src: 'assets/img-8.jpeg', alt: 'Descrição da foto 8', caption: 'Que gatos pt2.' },
-        { src: 'assets/img-9.jpeg', alt: 'Descrição da foto 9', caption: 'Que gatos pt3' },
-        { src: 'assets/img-10.jpeg', alt: 'Descrição da foto 10', caption: 'Que gatos pt4.' },
+        { src: 'assets/img-9.jpeg', alt: 'Descrição da foto 9', caption: 'Que gatos pt2' },
         { src: 'assets/img-11.jpeg', alt: 'Descrição da foto 11', caption: 'Dia de princesa pos-operada.' },
         { src: 'assets/img-12.jpeg', alt: 'Descrição da foto 12', caption: 'Sempre apoiando um ao outro.' },
-        { src: 'assets/img-13.jpeg', alt: 'Descrição da foto 13', caption: 'Mais um deep com voce.' },
-        { src: 'assets/img-14.jpeg', alt: 'Descrição da foto 14', caption: 'Momentos que guardo no coração.' },
         { src: 'assets/img-15.jpeg', alt: 'Descrição da foto 15', caption: 'Nossa jeito nerd.' },
         { src: 'assets/img-16.jpeg', alt: 'Descrição da foto 16', caption: 'Mais um dia te amando.' },
-        { src: 'assets/img-17.jpeg', alt: 'Descrição da foto 17', caption: 'Nosso treino de seis meses depois do primeiro Boa noite.' },
+        { src: 'assets/img-17.jpeg', alt: 'Descrição da foto 17', caption: 'Nosso treino de seis meses depois do primeiro "Boa noite."' },
+        { src: 'assets/img-18.jpeg', alt: 'Descrição da foto 18', caption: 'Nossa trip para BH.' },
+        { src: 'assets/img-19.jpeg', alt: 'Descrição da foto 19', caption: 'Nossa selfie de recem casados.' },
+        { src: 'assets/img-20.jpeg', alt: 'Descrição da foto 20', caption: 'Seu primeiro aniversario que passamos juntos.' },
     ];
 
-    // --- Seletores de DOM ---
+     // --- Seletores de DOM ---
     const slidesContainer = document.getElementById('slides');
     const captionText = document.getElementById('caption-text');
     const dateCounter = document.getElementById('date-counter');
@@ -39,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Estado do Carrossel ---
     let currentIndex = 0;
     let autoplayInterval;
+    let autoplayTimeout; // <-- Adicionado para controlar o reinício do autoplay
     let isPausedByUser = false;
 
     /**
@@ -51,9 +51,8 @@ document.addEventListener('DOMContentLoaded', () => {
         let months = (endDate.getFullYear() - startDate.getFullYear()) * 12;
         months -= startDate.getMonth();
         months += endDate.getMonth();
-        months = months <= 0 ? 0 : months;
-
-        let days = 0;
+        
+        let days;
         if (endDate.getDate() >= startDate.getDate()) {
             days = endDate.getDate() - startDate.getDate();
         } else {
@@ -61,6 +60,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const daysInLastMonth = new Date(endDate.getFullYear(), endDate.getMonth(), 0).getDate();
             days = (daysInLastMonth - startDate.getDate()) + endDate.getDate();
         }
+
+        // Garante que meses não seja negativo se a data for no futuro próximo
+        months = Math.max(0, months);
+        
         return { months, days };
     }
 
@@ -69,7 +72,8 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     function updateCounter() {
         const now = new Date();
-        const diff = diffMonthsDays(START_DATE, now);
+        // A data de início do relacionamento é 15 de abril de 2025
+        const diff = diffMonthsDays(new Date('2025-04-15T00:00:00'), now);
         dateCounter.textContent = `Já são ${diff.months} meses e ${diff.days} dias do nosso "sim". ❤️`;
     }
 
@@ -81,7 +85,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const slides = document.querySelectorAll('.slide');
         const dots = document.querySelectorAll('.dot');
         
-        // Garante que o índice esteja dentro dos limites
         const newIndex = (index + slides.length) % slides.length;
         currentIndex = newIndex;
 
@@ -96,24 +99,8 @@ document.addEventListener('DOMContentLoaded', () => {
         captionText.textContent = SLIDES_DATA[currentIndex].caption;
     }
 
-    /**
-     * Funções para ir para o slide seguinte e anterior.
-     */
-    function nextSlide() {
-        goToSlide(currentIndex + 1);
-    }
-
-    function prevSlide() {
-        goToSlide(currentIndex - 1);
-    }
-
-    /**
-     * Inicia o autoplay do carrossel.
-     */
-    function startAutoplay() {
-        if (isPausedByUser) return;
-        autoplayInterval = setInterval(nextSlide, AUTOPLAY_INTERVAL_MS);
-    }
+    function nextSlide() { goToSlide(currentIndex + 1); }
+    function prevSlide() { goToSlide(currentIndex - 1); }
 
     /**
      * Para o autoplay.
@@ -123,16 +110,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     /**
+     * Inicia o autoplay do carrossel.
+     */
+    function startAutoplay() {
+        stopAutoplay(); // Garante que nenhum loop anterior esteja rodando
+        if (isPausedByUser) return;
+        autoplayInterval = setInterval(nextSlide, AUTOPLAY_INTERVAL_MS);
+    }
+
+    /**
      * Reinicia o autoplay após uma interação manual.
      */
     function resetAutoplay() {
         isPausedByUser = true;
         stopAutoplay();
-        // Retoma o autoplay após um tempo
-        setTimeout(() => {
+        
+        // Limpa qualquer reinício agendado anteriormente para evitar múltiplos loops
+        clearTimeout(autoplayTimeout);
+
+        // Agenda um novo reinício do autoplay
+        autoplayTimeout = setTimeout(() => {
             isPausedByUser = false;
             startAutoplay();
-        }, AUTOPLAY_INTERVAL_MS * 2);
+        }, AUTOPLAY_INTERVAL_MS * 2); // Dobro do tempo para dar uma pausa
     }
 
     /**
@@ -140,7 +140,6 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     function createCarousel() {
         SLIDES_DATA.forEach((slideData, index) => {
-            // Cria o slide
             const slide = document.createElement('figure');
             slide.className = 'slide';
             const img = document.createElement('img');
@@ -152,7 +151,6 @@ document.addEventListener('DOMContentLoaded', () => {
             slide.appendChild(img);
             slidesContainer.appendChild(slide);
 
-            // Cria o dot
             const dot = document.createElement('button');
             dot.className = 'dot';
             dot.setAttribute('aria-label', `Ir para a foto ${index + 1}`);
@@ -170,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function setupSwipe() {
         let touchStartX = 0;
         let touchEndX = 0;
-        const swipeThreshold = 40; // Mínimo de pixels para considerar um swipe
+        const swipeThreshold = 40;
 
         slidesContainer.addEventListener('touchstart', (e) => {
             touchStartX = e.changedTouches[0].screenX;
@@ -180,11 +178,8 @@ document.addEventListener('DOMContentLoaded', () => {
             touchEndX = e.changedTouches[0].screenX;
             const diff = touchEndX - touchStartX;
             if (Math.abs(diff) > swipeThreshold) {
-                if (diff < 0) { // Swipe para a esquerda
-                    nextSlide();
-                } else { // Swipe para a direita
-                    prevSlide();
-                }
+                if (diff < 0) { nextSlide(); } 
+                else { prevSlide(); }
                 resetAutoplay();
             }
         });
@@ -194,21 +189,28 @@ document.addEventListener('DOMContentLoaded', () => {
      * Função principal de inicialização.
      */
     function init() {
+        // A data de início do relacionamento é 15 de abril de 2025
+        const startDate = new Date('2025-04-15T00:00:00');
+        
         createCarousel();
-        updateCounter();
+        
+        // A função diffMonthsDays agora usa a data correta
+        const diff = diffMonthsDays(startDate, new Date());
+        dateCounter.textContent = `Já são ${diff.months} meses e ${diff.days} dias te amando mais do que ontem e menos que amanhã. 🤍`;
+        
         // Atualiza o contador a cada hora
-        setInterval(updateCounter, 1000 * 60 * 60);
+        setInterval(() => {
+            const currentDiff = diffMonthsDays(startDate, new Date());
+            dateCounter.textContent = `Já são ${currentDiff.months} meses e ${currentDiff.days} dias te amando mais do que ontem e menos que amanhã. 🤍`;
+        }, 1000 * 60 * 60);
 
-        // Define o estado inicial
         goToSlide(0);
         startAutoplay();
         setupSwipe();
 
-        // Listeners dos botões
         nextBtn.addEventListener('click', () => { nextSlide(); resetAutoplay(); });
         prevBtn.addEventListener('click', () => { prevSlide(); resetAutoplay(); });
     }
 
-    // Inicia a aplicação
     init();
 });
