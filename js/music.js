@@ -1,88 +1,53 @@
-// js/music.js (Versão Corrigida para Celular)
+// js/music.js (Versão Local - MP3)
 
-// --- Configuração da Música ---
-const YOUTUBE_VIDEO_ID = 'uuZE_IRwLNI'; // Justin Timberlake - Mirrors
-const START_SECONDS = 329; // Início em 5:29
-const END_SECONDS = 386;   // Fim em 6:26
+document.addEventListener('DOMContentLoaded', () => {
+    
+    // --- Configuração da Música ---
+    const audio = document.getElementById('bg-music');
+    const startBtn = document.getElementById('start-btn');
+    const overlay = document.getElementById('overlay');
 
-// --- Variáveis Globais do Módulo ---
-let player;
-let loopInterval;
-const overlay = document.getElementById('overlay');
-const startBtn = document.getElementById('start-btn');
+    // Defina os tempos em SEGUNDOS
+    // Se você cortou o MP3 para ter SÓ o trecho, coloque START_TIME = 0 e END_TIME = null
+    const START_TIME = 329; // 5:29
+    const END_TIME = 386;   // 6:26
 
-/**
- * Função global chamada pela API do YouTube quando estiver pronta.
- * Não renomeie esta função.
- */
-function onYouTubeIframeAPIReady() {
-    player = new YT.Player('yt-player', {
-        height: '0',
-        width: '0',
-        videoId: YOUTUBE_VIDEO_ID,
-        playerVars: {
-            'autoplay': 0,
-            'controls': 0,
-            'showinfo': 0,
-            'rel': 0,
-            'modestbranding': 1,
-            'playsinline': 1 // Essencial para alguns navegadores móveis
-        },
-        events: {
-            'onReady': onPlayerReady,
+    // --- Lógica de Loop Manual ---
+    // (Só é usada se você estiver usando a música completa e quiser tocar um trecho específico)
+    if (END_TIME) {
+        audio.addEventListener('timeupdate', () => {
+            if (audio.currentTime >= END_TIME) {
+                audio.currentTime = START_TIME;
+                audio.play();
+            }
+        });
+    } else {
+        // Se a música já estiver cortada, usa o loop nativo que é mais suave
+        audio.loop = true;
+    }
+
+    // --- Iniciar ao Clicar ---
+    startBtn.addEventListener('click', () => {
+        // 1. Esconde o overlay
+        overlay.classList.add('hidden');
+
+        // 2. Prepara o áudio
+        audio.currentTime = START_TIME;
+        
+        // 3. Tenta tocar (Navegadores bloqueiam áudio sem interação, por isso está no click)
+        const playPromise = audio.play();
+
+        if (playPromise !== undefined) {
+            playPromise.then(_ => {
+                // Áudio começou com sucesso
+                console.log("Música tocando!");
+            })
+            .catch(error => {
+                console.error("Erro ao tentar tocar:", error);
+                // Fallback: Se der erro, tenta tocar mudo e aumentar o volume depois
+                // (Raro de acontecer dentro de um evento de click)
+            });
         }
     });
-}
 
-/**
- * Função chamada quando o player do YouTube está pronto.
- * @param {object} event - Evento da API do YouTube.
- */
-function onPlayerReady(event) {
-    // Prepara o player para o celular, deixando-o mudo inicialmente.
-    event.target.mute();
-    
-    // O player está pronto, aguardando interação do usuário.
-    startBtn.disabled = false;
-    startBtn.textContent = 'Começar';
-}
-
-/**
- * Inicia o loop da música e monitora o tempo.
- */
-function startMusicLoop() {
-    if (!player || typeof player.playVideo !== 'function') {
-        console.error('Player do YouTube não está pronto.');
-        return;
-    }
-
-    // Reativa o som antes de tocar (o passo chave para funcionar no celular)
-    player.unMute();
-    
-    // Inicia a música no ponto definido
-    player.seekTo(START_SECONDS, true);
-    player.playVideo();
-
-    // Limpa qualquer intervalo anterior para evitar múltiplos loops
-    if (loopInterval) {
-        clearInterval(loopInterval);
-    }
-
-    // Cria um timer para verificar o tempo e fazer o loop manualmente
-    loopInterval = setInterval(() => {
-        if (player.getCurrentTime() >= END_SECONDS) {
-            player.seekTo(START_SECONDS, true);
-        }
-    }, 500); // Verifica a cada meio segundo
-}
-
-/**
- * Adiciona o evento de clique ao botão "Começar".
- */
-startBtn.addEventListener('click', () => {
-    // Esconde o overlay com uma transição suave
-    overlay.classList.add('hidden');
-
-    // Inicia a música
-    startMusicLoop();
 });
