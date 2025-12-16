@@ -1,21 +1,18 @@
-// js/app.js
+// js/app.js - Versão Final (Sem Digitação)
 
 document.addEventListener('DOMContentLoaded', () => {
     
     // --- DADOS PESSOAIS ---
     const START_DATE = new Date('2025-04-15T00:00:00'); 
-    const MEETING_DATE = new Date('2025-03-18T00:00:00');   // Dia que se conheceram (Exemplo)
-    const BIBLE_START_DATE = new Date('2025-05-05T00:00:00'); // Começaram a ler a Bíblia (Exemplo)
+    const MEETING_DATE = new Date('2025-03-18T00:00:00');   
+    const BIBLE_START_DATE = new Date('2025-05-05T00:00:00'); 
     
     const AUTOPLAY_INTERVAL_MS = 5000;
 
-    // Seus Slides
+    // --- SLIDES ---
     const SLIDES_DATA = [
-        // Exemplo: Se cortar a cabeça na foto 5, adicione o focus 'top' ou '50% 20%'
-        //{ src: 'assets/img-5.jpeg', caption: '...', focus: '50% 20%' },
         { src: 'assets/img-1.jpeg', alt: 'Foto 1', caption: 'Primeiro treino como namorados.' },
         { src: 'assets/img-2.jpeg', alt: 'Foto 2', caption: 'Nosso primeiro encontro.' },
-        //{ src: 'assets/img-3.jpeg', alt: 'Foto 3', caption: 'Primeira ida na sua casa.' },
         { src: 'assets/img-3.jpeg', alt: 'Foto 3', caption: 'Primeira ida na sua casa.', focus: '50% 20%'},
         { src: 'assets/img-4.jpeg', alt: 'Foto 4', caption: 'Primeira fotinha no carro.' },
         { src: 'assets/img-5.jpeg', alt: 'Foto 5', caption: 'O que dizer desse dia...' },
@@ -32,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { src: 'assets/img-20.jpeg', alt: 'Foto 20', caption: 'Primeiro aniversário juntos.', focus: '50% 20%' },
     ];
 
-    // --- CARROSSEL ---
+    // --- DOM REFERENCES ---
     const slidesContainer = document.getElementById('slides');
     const captionText = document.getElementById('caption-text');
     const dateCounter = document.getElementById('date-counter');
@@ -47,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let autoplayTimeout;
     let isPausedByUser = false;
 
+    // --- FUNÇÕES ---
     function diffMonthsDays(startDate, endDate) {
         let months = (endDate.getFullYear() - startDate.getFullYear()) * 12;
         months -= startDate.getMonth();
@@ -120,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- BÍBLIA TRACKER ---
+    // --- TRACKER BÍBLIA ---
     function initBibleTracker() {
         const booksCountEl = document.getElementById('books-count');
         const cyclesCountEl = document.getElementById('cycles-count');
@@ -193,27 +191,27 @@ document.addEventListener('DOMContentLoaded', () => {
         renderBooks(newTestament, 'nt-books');
     }
 
-    // --- INIT ---
+    // --- INICIALIZAÇÃO ---
     function init() {
         createCarousel();
         
         const updateDate = () => {
             const now = new Date();
 
-            // 1. Contador Principal (Namoro)
+            // 1. Contador Namoro
             const diffNamoro = diffMonthsDays(START_DATE, now);
-            dateCounter.textContent = `E estamos namorando há ${diffNamoro.months} meses e ${diffNamoro.days} dias.`;
+            dateCounter.textContent = `${diffNamoro.months} meses e ${diffNamoro.days} dias de nós.`;
 
-            // 2. Contador "Nos Conhecemos"
+            // 2. Contador Conhecemos
             const diffConheceram = diffMonthsDays(MEETING_DATE, now);
-            meetCounter.textContent = `Desde que nos conhecemos já são ${diffConheceram.months} meses e ${diffConheceram.days} dias.`;
+            meetCounter.textContent = `${diffConheceram.months} meses e ${diffConheceram.days} dias de história.`;
 
-            // 3. Contador "Bíblia"
+            // 3. Contador Bíblia
             const diffBiblia = diffMonthsDays(BIBLE_START_DATE, now);
-            bibleCounter.textContent = `E já fazem ${diffBiblia.months} meses e ${diffBiblia.days} dias lendo a palavra juntos.`;
+            bibleCounter.textContent = `${diffBiblia.months} meses e ${diffBiblia.days} dias de leitura.`;
         };
         
-        updateDate(); // Roda a primeira vez
+        updateDate(); 
         setInterval(updateDate, 1000 * 60 * 60);
 
         goToSlide(0);
@@ -223,6 +221,25 @@ document.addEventListener('DOMContentLoaded', () => {
         prevBtn.addEventListener('click', () => { prevSlide(); resetAutoplay(); });
 
         initBibleTracker();
+
+        // CONTROLE AUDIO
+        const audioBtn = document.getElementById('audio-control');
+        const audioPlayer = document.getElementById('bg-music');
+        let isMuted = false;
+
+        if(audioBtn && audioPlayer) {
+            audioBtn.addEventListener('click', () => {
+                isMuted = !isMuted;
+                audioPlayer.muted = isMuted;
+                if(isMuted) {
+                    audioBtn.textContent = '🔇';
+                    audioBtn.style.opacity = '0.7';
+                } else {
+                    audioBtn.textContent = '🔊';
+                    audioBtn.style.opacity = '1';
+                }
+            });
+        }
     }
 
     init();
