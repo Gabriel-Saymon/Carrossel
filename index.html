@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Uma Surpresa Para Você</title>
     
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1a1a1a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="assets/img-1.jpeg">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&family=Playfair+Display:ital,wght@0,600;1,600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
@@ -12,6 +18,16 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+
+    <div class="firefly-container">
+        <div class="firefly"></div><div class="firefly"></div><div class="firefly"></div>
+        <div class="firefly"></div><div class="firefly"></div><div class="firefly"></div>
+        <div class="firefly"></div><div class="firefly"></div><div class="firefly"></div>
+        <div class="firefly"></div><div class="firefly"></div><div class="firefly"></div>
+        <div class="firefly"></div><div class="firefly"></div><div class="firefly"></div>
+        <div class="firefly"></div><div class="firefly"></div><div class="firefly"></div>
+        <div class="firefly"></div><div class="firefly"></div>
+    </div>
 
     <div id="overlay">
         <button id="start-btn">Começar</button>
@@ -38,17 +54,38 @@
             <div class="caption-container">
                 <p id="caption-text" class="legend">Carregando...</p>
                 
-                <p id="meet-counter" class="counter">Calculando dia que conhecemos...</p>
-                <p id="date-counter" class="counter">Calculando namoro...</p>
-                <p id="bible-reading-counter" class="counter">Calculando leitura bíblica...</p>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-icon"></div>
+                        <div class="timeline-content">
+                            <small>Onde tudo começou</small>
+                            <p id="meet-counter">Calculando...</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item highlight">
+                        <div class="timeline-icon"></div>
+                        <div class="timeline-content">
+                            <small>Nossa Aliança</small>
+                            <p id="date-counter">Calculando...</p>
+                        </div>
+                    </div>
 
+                    <div class="timeline-item">
+                        <div class="timeline-icon"></div>
+                        <div class="timeline-content">
+                            <small>Nosso Propósito</small>
+                            <p id="bible-reading-counter">Calculando...</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
         <section class="bible-section">
             <div class="divider"></div>
             <h2>Nossa Jornada na Palavra</h2>
-            <p class="subtitle">A tua palavra é lâmpada que ilumina os meus passos e luz que clareia o meu caminho. <br>Salmos 119:105.</p>
+            <p class="subtitle">"A tua palavra é lâmpada que ilumina os meus passos e luz que clareia o meu caminho." <br>Salmos 119:105.</p>
             
             <div class="bible-stats">
                 <div class="stat-box">
@@ -82,11 +119,15 @@
                 <p class="letter-date">20 de Novembro de 2025</p>
                 
                 <div class="letter-body">
-                    É meu anjo, cá estou eu para colocar um pouco em palavras tudo aquilo que estamos vivendo, sonhando e até mesmo um pouco daquilo que você representa para mim. É muito difícil colocar em palavras tudo isso já que em muitas delas não se é capaz mensurar tais coisas em sua totalidade.
-                    Sem dúvida a cada dia que passa me impressiono mais com você… costumo dizer que existe um Gabriel antes e depois da Rhaiza, mas é possível observar que a recíproca é verdadeira! Pois o que antes era incrível a cada dia tem se melhorado mais ainda. Nesses tempos nos quais estamos juntos, noto o quão incrível você é! Uma mulher tão cuidadosa, carinhosa, esforçada, amável, companheira, fiel, sábia, com uma fé que impressiona é um amor por Deus que motiva! Com certeza se tem mais um 1 milhão de adjetivos para lhe dedicar e ainda assim seriam poucos.
-                    Ver todo cuidado e carinho que você tem por mim, se importar em saber o que pode melhorar, fazer tanto por amor e ainda ser tudo que você é… confesso que às vezes me pergunto se mereço isso tudo. Porque olha, você é muito mais do que eu pedi ou sonhei…
-                    Por isso oro tanto e peço a Deus que me dê sabedoria, mansidão e me ensine todo necessário para que eu possa cuidar tão bem do tesouro que Ele está confiando a mim!
-                    Obrigado por trazer alegria e significado aos meus dias! Você me faz querer ser um homem melhor todos os dias… não para que eu conquiste muitas coisas para mim, mas para que eu conquiste muitas coisas por você! Para que venhamos desfrutar juntos de um incrível propósito nessa jornada que é a vida! Eu te amo mais do que ontem e menos que amanhã.
+                    <p>É meu anjo, cá estou eu para colocar um pouco em palavras tudo aquilo que estamos vivendo, sonhando e até mesmo um pouco daquilo que você representa para mim. É muito difícil colocar em palavras tudo isso já que em muitas delas não se é capaz mensurar tais coisas em sua totalidade.</p>
+                    
+                    <p>Sem dúvida a cada dia que passa me impressiono mais com você… costumo dizer que existe um Gabriel antes e depois da Rhaiza, mas é possível observar que a recíproca é verdadeira! Pois o que antes era incrível a cada dia tem se melhorado mais ainda. Nesses tempos nos quais estamos juntos, noto o quão incrível você é! Uma mulher tão cuidadosa, carinhosa, esforçada, amável, companheira, fiel, sábia, com uma fé que impressiona é um amor por Deus que motiva! Com certeza se tem mais um 1 milhão de adjetivos para lhe dedicar e ainda assim seriam poucos.</p>
+                    
+                    <p>Ver todo cuidado e carinho que você tem por mim, se importar em saber o que pode melhorar, fazer tanto por amor e ainda ser tudo que você é… confesso que às vezes me pergunto se mereço isso tudo. Porque olha, você é muito mais do que eu pedi ou sonhei…</p>
+                    
+                    <p>Por isso oro tanto e peço a Deus que me dê sabedoria, mansidão e me ensine todo necessário para que eu possa cuidar tão bem do tesouro que Ele está confiando a mim!</p>
+                    
+                    <p>Obrigado por trazer alegria e significado aos meus dias! Você me faz querer ser um homem melhor todos os dias… não para que eu conquiste muitas coisas para mim, mas para que eu conquiste muitas coisas por você! Para que venhamos desfrutar juntos de um incrível propósito nessa jornada que é a vida! Eu te amo mais do que ontem e menos que amanhã.</p>
 
                     <p class="signature">Seu Preto 🤍</p>
                 </div>
@@ -94,10 +135,14 @@
         </section>
     </main>
 
+    <button id="audio-control" class="floating-audio" aria-label="Silenciar Música">
+        🔊
+    </button>
+
     <audio id="bg-music" preload="auto">
         <source src="media/music.mp3" type="audio/mpeg">
-        Seu navegador não suporta áudio.
     </audio>
+
     <script src="js/music.js"></script>
     <script src="js/app.js"></script>
 
