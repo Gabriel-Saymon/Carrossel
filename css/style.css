@@ -1,4 +1,4 @@
-/* css/style.css */
+/* css/style.css - Versão Final (Carta Original + Melhorias Visuais) */
 
 :root {
     --bg-start: #1a1a1a;
@@ -26,9 +26,10 @@ body {
     min-height: 100vh;
     padding: 2rem 1rem;
     overflow-x: hidden;
+    position: relative;
 }
 
-main { width: 100%; max-width: var(--frame-max-width); text-align: center; margin: 0 auto; }
+main { width: 100%; max-width: var(--frame-max-width); text-align: center; margin: 0 auto; position: relative; z-index: 10; }
 
 /* HEADER */
 header { margin-bottom: 2.5rem; position: relative; padding-bottom: 1.5rem; }
@@ -90,9 +91,37 @@ header::after {
 .caption-container { margin-top: 2rem; padding: 0 1rem; min-height: 100px; }
 .legend {
     font-family: var(--font-handwriting); font-size: 1.8rem; color: var(--accent);
-    margin-bottom: 0.5rem; text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    margin-bottom: 2rem; text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
-.counter { font-size: 0.85rem; color: var(--text-secondary); letter-spacing: 1px; }
+
+/* TIMELINE VERTICAL (Transparente e Alinhada) */
+.timeline {
+    position: relative; max-width: 500px; margin: 2rem auto;
+    padding-left: 0; text-align: left;
+}
+.timeline::before {
+    content: ''; position: absolute; left: 15px; /* Centro da bolinha */
+    top: 0; bottom: 0; width: 2px;
+    background: rgba(192, 178, 131, 0.3); z-index: 0;
+}
+.timeline-item { position: relative; margin-bottom: 2.5rem; padding-left: 3.5rem; }
+.timeline-icon {
+    position: absolute; left: 0; top: 0; width: 32px; height: 32px;
+    background: transparent; border: 1px solid var(--accent);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; z-index: 1; box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    backdrop-filter: blur(2px);
+}
+.timeline-item.highlight .timeline-icon {
+    border-width: 2px; color: var(--accent);
+    box-shadow: 0 0 15px rgba(192, 178, 131, 0.6); transform: scale(1.1);
+}
+.timeline-content small {
+    display: block; color: var(--accent); font-size: 0.75rem;
+    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.2rem;
+}
+.timeline-content p { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.4; }
+
 
 /* BÍBLIA & CARTA */
 .divider {
@@ -138,13 +167,19 @@ header::after {
 .book-item .check-icon { opacity: 0; transform: scale(0); transition: all 0.3s; }
 .book-item.read .check-icon { opacity: 1; transform: scale(1); }
 
+
+/* --- CARTA (Estilo Original / Texto Corrido) --- */
 .letter-paper {
-    background-color: rgba(240, 240, 240, 0.05); padding: 3rem 2rem; border-radius: 8px;
-    border: 1px solid rgba(192, 178, 131, 0.2); max-width: 600px; margin: 0 auto; text-align: left; position: relative;
+    background-color: rgba(240, 240, 240, 0.05); /* Fundo original escuro/translúcido */
+    padding: 3rem 2rem; border-radius: 8px;
+    border: 1px solid rgba(192, 178, 131, 0.2); 
+    max-width: 600px; margin: 0 auto;
+    text-align: left; position: relative;
 }
 .letter-paper::before {
-    content: '"'; position: absolute; top: -10px; left: 20px; font-family: var(--font-title);
-    font-size: 6rem; color: var(--accent); opacity: 0.15; line-height: 1;
+    content: '"'; position: absolute; top: -10px; left: 20px; 
+    font-family: var(--font-title); font-size: 6rem; color: var(--accent); 
+    opacity: 0.15; line-height: 1;
 }
 .letter-date {
     font-size: 0.8rem; color: var(--text-secondary); text-align: right; margin-bottom: 2rem;
@@ -170,6 +205,57 @@ header::after {
     background: var(--accent); color: var(--bg-end); box-shadow: 0 0 30px rgba(192, 178, 131, 0.5); transform: scale(1.05);
 }
 #overlay.hidden { opacity: 0; pointer-events: none; }
+
+/* BOTÃO FLUTUANTE */
+.floating-audio {
+    position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px;
+    border-radius: 50%; background: rgba(26, 26, 26, 0.85); border: 1px solid var(--accent);
+    color: var(--accent); font-size: 1.5rem; cursor: pointer; z-index: 999;
+    backdrop-filter: blur(5px); transition: all 0.3s;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center;
+}
+.floating-audio:hover { transform: scale(1.1); background: var(--accent); color: var(--bg-start); }
+
+/* VAGALUMES */
+.firefly-container {
+    position: fixed; left: 0; top: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 0;
+}
+.firefly {
+    position: absolute; width: 6px; height: 6px;
+    background-color: var(--accent); border-radius: 50%;
+    opacity: 0; box-shadow: 0 0 15px var(--accent);
+    animation: fly 15s infinite ease-in-out;
+}
+@keyframes fly {
+    0% { transform: translate(0, 0); opacity: 0; }
+    10% { opacity: 0.8; } 
+    50% { transform: translate(60px, -60px); opacity: 0.4; }
+    80% { opacity: 0.8; }
+    100% { transform: translate(-30px, 30px); opacity: 0; }
+}
+
+/* Vagalumes Aleatórios */
+.firefly:nth-child(1) { top: 10%; left: 10%; animation-duration: 8s; animation-delay: 0s; }
+.firefly:nth-child(2) { top: 20%; left: 80%; animation-duration: 12s; animation-delay: 1s; }
+.firefly:nth-child(3) { top: 80%; left: 15%; animation-duration: 15s; animation-delay: 2s; }
+.firefly:nth-child(4) { top: 40%; left: 60%; animation-duration: 9s; animation-delay: 3s; }
+.firefly:nth-child(5) { top: 70%; left: 90%; animation-duration: 11s; animation-delay: 0.5s; }
+.firefly:nth-child(6) { top: 30%; left: 30%; animation-duration: 13s; animation-delay: 1.5s; }
+.firefly:nth-child(7) { top: 90%; left: 10%; animation-duration: 10s; animation-delay: 2.5s; }
+.firefly:nth-child(8) { top: 15%; left: 50%; animation-duration: 16s; animation-delay: 4s; }
+.firefly:nth-child(9) { top: 55%; left: 20%; animation-duration: 7s; animation-delay: 0.2s; }
+.firefly:nth-child(10) { top: 60%; left: 70%; animation-duration: 14s; animation-delay: 3.5s; }
+.firefly:nth-child(11) { top: 5%; left: 85%; animation-duration: 9s; animation-delay: 1.2s; }
+.firefly:nth-child(12) { top: 85%; left: 45%; animation-duration: 11s; animation-delay: 2.8s; }
+.firefly:nth-child(13) { top: 25%; left: 25%; animation-duration: 13s; animation-delay: 0.8s; }
+.firefly:nth-child(14) { top: 45%; left: 95%; animation-duration: 8s; animation-delay: 4.5s; }
+.firefly:nth-child(15) { top: 75%; left: 5%; animation-duration: 15s; animation-delay: 1.8s; }
+.firefly:nth-child(16) { top: 35%; left: 55%; animation-duration: 10s; animation-delay: 3.2s; }
+.firefly:nth-child(17) { top: 95%; left: 80%; animation-duration: 12s; animation-delay: 0.3s; }
+.firefly:nth-child(18) { top: 50%; left: 40%; animation-duration: 14s; animation-delay: 2.2s; }
+.firefly:nth-child(19) { top: 10%; left: 35%; animation-duration: 9s; animation-delay: 4.8s; }
+.firefly:nth-child(20) { top: 65%; left: 15%; animation-duration: 11s; animation-delay: 1.0s; }
 
 @media (max-width: 768px) {
     body { padding: 1.5rem 0.5rem; }
