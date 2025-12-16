@@ -24,7 +24,10 @@ body {
     background-image: linear-gradient(145deg, var(--bg-start), var(--bg-end));
     color: var(--text-primary);
     min-height: 100vh;
+    /* Ajuste para não colar nas bordas do iPhone */
     padding: 2rem 1rem;
+    padding-top: env(safe-area-inset-top, 2rem); 
+    padding-bottom: env(safe-area-inset-bottom, 2rem);
     overflow-x: hidden;
     position: relative;
 }
@@ -170,11 +173,15 @@ header::after {
 
 /* --- CARTA (Estilo Original / Texto Corrido) --- */
 .letter-paper {
-    background-color: rgba(240, 240, 240, 0.05); /* Fundo original escuro/translúcido */
-    padding: 3rem 2rem; border-radius: 8px;
+    background-color: rgba(240, 240, 240, 0.05);
+    padding: 2rem 1.5rem; /* Reduzi um pouco o padding lateral */
+    border-radius: 8px;
     border: 1px solid rgba(192, 178, 131, 0.2); 
-    max-width: 600px; margin: 0 auto;
-    text-align: left; position: relative;
+    max-width: 600px; 
+    margin: 0 auto 4rem auto; /* Margem extra embaixo para não colar no fim da tela */
+    text-align: left; 
+    position: relative;
+    word-wrap: break-word; /* Garante que textos longos quebrem linha */
 }
 .letter-paper::before {
     content: '"'; position: absolute; top: -10px; left: 20px; 
