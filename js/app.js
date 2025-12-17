@@ -1,4 +1,27 @@
-// js/app.js - Versão Final (Sem Digitação)
+// js/app.js - Versão Sincronizada (Firebase)
+
+// Importa as funções do Firebase diretamente da nuvem
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+// --- CONFIGURAÇÃO DO FIREBASE ---
+// 1. Vai à consola do Firebase > Definições do Projeto > Geral > As suas aplicações
+// 2. Copia o conteúdo de "const firebaseConfig = { ... }" e COLA ABAIXO substituindo este bloco:
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDeYBvzUntv1mB6Kxi9T6hz52MeWP_0DFg",
+  authDomain: "nossahistoria-e51b5.firebaseapp.com",
+  databaseURL: "https://nossahistoria-e51b5-default-rtdb.firebaseio.com",
+  projectId: "nossahistoria-e51b5",
+  storageBucket: "nossahistoria-e51b5.firebasestorage.app",
+  messagingSenderId: "123554417708",
+  appId: "1:123554417708:web:c200a1ad87663037e79589"
+};
+
+// Inicializa o Banco de Dados
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
 
 document.addEventListener('DOMContentLoaded', () => {
     
@@ -29,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { src: 'assets/img-20.jpeg', alt: 'Foto 20', caption: 'Primeiro aniversário juntos.', focus: '50% 20%' },
     ];
 
-    // --- DOM REFERENCES ---
+    // --- REFERÊNCIAS DOM ---
     const slidesContainer = document.getElementById('slides');
     const captionText = document.getElementById('caption-text');
     const dateCounter = document.getElementById('date-counter');
@@ -44,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let autoplayTimeout;
     let isPausedByUser = false;
 
-    // --- FUNÇÕES ---
+    // --- FUNÇÕES DE DATAS ---
     function diffMonthsDays(startDate, endDate) {
         let months = (endDate.getFullYear() - startDate.getFullYear()) * 12;
         months -= startDate.getMonth();
@@ -60,6 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return { months: Math.max(0, months), days };
     }
 
+    // --- CARROSSEL ---
     function goToSlide(index) {
         const slides = document.querySelectorAll('.slide');
         const dots = document.querySelectorAll('.dot');
@@ -118,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- TRACKER BÍBLIA ---
+    // --- TRACKER BÍBLIA (COM FIREBASE) ---
     function initBibleTracker() {
         const booksCountEl = document.getElementById('books-count');
         const cyclesCountEl = document.getElementById('cycles-count');
@@ -138,30 +162,49 @@ document.addEventListener('DOMContentLoaded', () => {
             "1 João", "2 João", "3 João", "Judas", "Apocalipse"
         ];
 
-        let savedProgress = JSON.parse(localStorage.getItem('bibleProgress')) || {};
-        let completionCount = parseInt(localStorage.getItem('bibleCompletions')) || 0;
+        // Variáveis locais (serão atualizadas pela nuvem)
+        let savedProgress = {};
+        let completionCount = 0;
 
-        updateStats();
+        // 1. OUVIR A NUVEM (Lê os dados e atualiza a tela sempre que algo muda)
+        const progressRef = ref(db, 'bible/progress');
+        const completionRef = ref(db, 'bible/completions');
+
+        onValue(progressRef, (snapshot) => {
+            savedProgress = snapshot.val() || {}; // Se vier vazio, cria objeto vazio
+            updateStats();
+            // Re-renderiza os livros para atualizar os vistos
+            renderBooks(oldTestament, 'ot-books');
+            renderBooks(newTestament, 'nt-books');
+        });
+
+        onValue(completionRef, (snapshot) => {
+            completionCount = snapshot.val() || 0;
+            updateStats();
+        });
 
         function updateStats() {
             const currentCount = Object.keys(savedProgress).length;
             booksCountEl.textContent = `${currentCount} / ${TOTAL_BOOKS}`;
             cyclesCountEl.textContent = `${completionCount}`;
+            
+            // Verifica se completou dentro da atualização
+            if (currentCount === TOTAL_BOOKS) {
+                setTimeout(() => {
+                    handleCompletion();
+                }, 500);
+            }
         }
 
-        function checkCompletion() {
-            if (Object.keys(savedProgress).length === TOTAL_BOOKS) {
-                setTimeout(() => {
-                    alert("Parabéns! Vocês completaram a leitura de toda a Bíblia juntos! ❤️\n\nO ciclo será reiniciado.");
-                    completionCount++;
-                    localStorage.setItem('bibleCompletions', completionCount);
-                    savedProgress = {};
-                    localStorage.setItem('bibleProgress', JSON.stringify(savedProgress));
-                    
-                    renderBooks(oldTestament, 'ot-books');
-                    renderBooks(newTestament, 'nt-books');
-                    updateStats();
-                }, 500);
+        // Função que lida com o "Reset" ao completar
+        function handleCompletion() {
+            // Só executa se tiver livros marcados (para evitar loop infinito)
+            if (Object.keys(savedProgress).length > 0) {
+                alert(`Parabéns! Vocês completaram a leitura de toda a Bíblia juntos! ❤️\n\nEsta foi a leitura nº ${completionCount + 1}.\n\nO progresso será reiniciado para a próxima jornada!`);
+                
+                // Atualiza na Nuvem (Isso vai disparar o onValue de novo e limpar a tela)
+                set(completionRef, completionCount + 1);
+                set(progressRef, {}); 
             }
         }
 
@@ -171,22 +214,33 @@ document.addEventListener('DOMContentLoaded', () => {
             bookList.forEach(book => {
                 const btn = document.createElement('div');
                 btn.className = 'book-item';
+                
+                // Verifica se está marcado (baseado nos dados da nuvem)
                 if (savedProgress[book]) btn.classList.add('read');
+                
                 btn.innerHTML = `<span>${book}</span> <span class="check-icon">✓</span>`;
+                
                 btn.addEventListener('click', () => {
-                    btn.classList.toggle('read');
-                    if (btn.classList.contains('read')) {
-                        savedProgress[book] = true;
+                    // Lógica de alternar
+                    const isRead = !!savedProgress[book];
+                    
+                    if (isRead) {
+                        // Se já leu, remove da lista
+                        const newProgress = {...savedProgress};
+                        delete newProgress[book];
+                        set(progressRef, newProgress); // Envia para a nuvem
                     } else {
-                        delete savedProgress[book];
+                        // Se não leu, adiciona
+                        const newProgress = {...savedProgress};
+                        newProgress[book] = true;
+                        set(progressRef, newProgress); // Envia para a nuvem
                     }
-                    localStorage.setItem('bibleProgress', JSON.stringify(savedProgress));
-                    updateStats();
-                    checkCompletion();
                 });
                 container.appendChild(btn);
             });
         }
+        
+        // Render inicial (vazio até os dados chegarem da nuvem)
         renderBooks(oldTestament, 'ot-books');
         renderBooks(newTestament, 'nt-books');
     }
@@ -197,16 +251,12 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const updateDate = () => {
             const now = new Date();
-
-            // 1. Contador Namoro
             const diffNamoro = diffMonthsDays(START_DATE, now);
             dateCounter.textContent = `${diffNamoro.months} meses e ${diffNamoro.days} dias de nós.`;
-
-            // 2. Contador Conhecemos
+            
             const diffConheceram = diffMonthsDays(MEETING_DATE, now);
             meetCounter.textContent = `${diffConheceram.months} meses e ${diffConheceram.days} dias de história.`;
-
-            // 3. Contador Bíblia
+            
             const diffBiblia = diffMonthsDays(BIBLE_START_DATE, now);
             bibleCounter.textContent = `${diffBiblia.months} meses e ${diffBiblia.days} dias de leitura.`;
         };
@@ -220,9 +270,8 @@ document.addEventListener('DOMContentLoaded', () => {
         nextBtn.addEventListener('click', () => { nextSlide(); resetAutoplay(); });
         prevBtn.addEventListener('click', () => { prevSlide(); resetAutoplay(); });
 
-        initBibleTracker();
+        initBibleTracker(); // Inicia o tracker com Firebase
 
-        // CONTROLE AUDIO
         const audioBtn = document.getElementById('audio-control');
         const audioPlayer = document.getElementById('bg-music');
         let isMuted = false;
