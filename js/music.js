@@ -1,4 +1,4 @@
-// js/music.js (Versão Local - MP3)
+// js/music.js
 
 document.addEventListener('DOMContentLoaded', () => {
     
@@ -6,14 +6,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const audio = document.getElementById('bg-music');
     const startBtn = document.getElementById('start-btn');
     const overlay = document.getElementById('overlay');
+    const audioBtn = document.getElementById('audio-control'); // Referência ao botão flutuante
 
     // Defina os tempos em SEGUNDOS
-    // Se você cortou o MP3 para ter SÓ o trecho, coloque START_TIME = 0 e END_TIME = null
-    const START_TIME = 329; // 5:29
-    const END_TIME = 386;   // 6:26
+    const START_TIME = 329; 
+    const END_TIME = 386; 
 
     // --- Lógica de Loop Manual ---
-    // (Só é usada se você estiver usando a música completa e quiser tocar um trecho específico)
     if (END_TIME) {
         audio.addEventListener('timeupdate', () => {
             if (audio.currentTime >= END_TIME) {
@@ -22,32 +21,28 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     } else {
-        // Se a música já estiver cortada, usa o loop nativo que é mais suave
         audio.loop = true;
     }
 
-    // --- Iniciar ao Clicar ---
+    // --- Iniciar ao Clicar (Overlay) ---
     startBtn.addEventListener('click', () => {
-        // 1. Esconde o overlay
         overlay.classList.add('hidden');
-
-        // 2. Prepara o áudio
         audio.currentTime = START_TIME;
-        
-        // 3. Tenta tocar (Navegadores bloqueiam áudio sem interação, por isso está no click)
-        const playPromise = audio.play();
-
-        if (playPromise !== undefined) {
-            playPromise.then(_ => {
-                // Áudio começou com sucesso
-                console.log("Música tocando!");
-            })
-            .catch(error => {
-                console.error("Erro ao tentar tocar:", error);
-                // Fallback: Se der erro, tenta tocar mudo e aumentar o volume depois
-                // (Raro de acontecer dentro de um evento de click)
-            });
-        }
+        audio.play().catch(error => console.log("Erro autolay:", error));
     });
 
+    // --- CORREÇÃO: Parar música ao sair da aba/minimizar ---
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            // Se o usuário minimizou ou trocou de aba -> PAUSA
+            audio.pause();
+        } else {
+            // Se o usuário voltou...
+            // Só dá play se o overlay JÁ ESTIVER ESCONDIDO (ou seja, se ele já tinha clicado em começar)
+            // E se o usuário não tiver mutado manualmente pelo botão flutuante (opcional)
+            if (overlay.classList.contains('hidden')) {
+                audio.play();
+            }
+        }
+    });
 });
