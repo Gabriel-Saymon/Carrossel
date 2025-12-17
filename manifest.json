@@ -1,0 +1,22 @@
+{
+  "name": "Nossa História",
+  "short_name": "Nós",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#1a1a1a",
+  "theme_color": "#c0b283",
+  "description": "Uma surpresa especial para nós.",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "assets/img-1.jpeg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "assets/img-1.jpeg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}
