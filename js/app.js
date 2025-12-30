@@ -22,7 +22,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-
 document.addEventListener('DOMContentLoaded', () => {
     
     // --- DADOS PESSOAIS ---
@@ -31,6 +30,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const BIBLE_START_DATE = new Date('2025-05-05T00:00:00'); 
     
     const AUTOPLAY_INTERVAL_MS = 5000;
+    // --- GRID FINANCEIRO (Soma total: R$ 20.000) ---
+    // Distribuição: Max R$ 200. Total de 160 caixinhas.
+    // Ordem fixa misturada para garantir sincronia visual entre os dispositivos.
+    const FIXED_VALUES = [
+        200, 50, 100, 200, 50, 150, 100, 200, 50, 100,
+        200, 100, 50, 200, 150, 100, 200, 50, 100, 200,
+        50, 100, 200, 50, 150, 200, 100, 50, 200, 100,
+        150, 200, 50, 100, 200, 50, 100, 200, 150, 50,
+        100, 200, 50, 100, 200, 50, 150, 200, 100, 50,
+        200, 100, 200, 50, 100, 200, 150, 50, 100, 200,
+        50, 100, 200, 50, 200, 100, 50, 150, 200, 100,
+        200, 50, 100, 200, 50, 100, 200, 150, 50, 100,
+        200, 50, 100, 200, 50, 200, 100, 150, 50, 200,
+        100, 50, 200, 50, 100, 200, 150, 50, 100, 200,
+        50, 100, 200, 50, 200, 100, 150, 50, 200, 100,
+        200, 50, 100, 200, 50, 100, 200, 150, 50, 100,
+        200, 50, 100, 200, 50, 200, 100, 150, 50, 200,
+        100, 50, 200, 50, 100, 200, 150, 50, 100, 200,
+        50, 100, 200, 50, 200, 100, 150, 50, 200, 100,
+        200, 50, 100, 200, 50, 100, 200, 150, 50, 100
+    ];
+    // Se quiser usar a ordem fixa, use FIXED_VALUES no lugar de CHALLENGE_VALUES
 
     // --- SLIDES ---
     const SLIDES_DATA = [
@@ -49,10 +70,12 @@ document.addEventListener('DOMContentLoaded', () => {
         { src: 'assets/img-17.jpeg', alt: 'Foto 17', caption: 'Treino de seis meses.' },
         { src: 'assets/img-18.jpeg', alt: 'Foto 18', caption: 'Nossa trip para BH.' },
         { src: 'assets/img-19.jpeg', alt: 'Foto 19', caption: 'Selfie de recém casados.', focus: '50% 45%'},
-        { src: 'assets/img-20.jpeg', alt: 'Foto 20', caption: 'Primeiro aniversário juntos.', focus: '50% 20%' },
+        { src: 'assets/img-20.jpeg', alt: 'Foto 20', caption: 'Seu primeiro aniversário juntos.', focus: '50% 20%' },
+        { src: 'assets/img-21.jpeg', alt: 'Foto 21', caption: 'Meu primeiro aniversário juntos.' },
+        { src: 'assets/img-22.jpeg', alt: 'Foto 22', caption: 'Primeiro Natal juntos.' },
     ];
 
-    // --- REFERÊNCIAS DOM ---
+    // --- DOM REFERENCES ---
     const slidesContainer = document.getElementById('slides');
     const captionText = document.getElementById('caption-text');
     const dateCounter = document.getElementById('date-counter');
@@ -67,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let autoplayTimeout;
     let isPausedByUser = false;
 
-    // --- FUNÇÕES DE DATAS ---
+    // --- FUNÇÕES ---
     function diffMonthsDays(startDate, endDate) {
         let months = (endDate.getFullYear() - startDate.getFullYear()) * 12;
         months -= startDate.getMonth();
@@ -142,7 +165,93 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- TRACKER BÍBLIA (COM FIREBASE) ---
+    // --- TRACKER FINANCEIRO (NOVO) ---
+    function initFinanceTracker() {
+        const gridContainer = document.getElementById('finance-grid');
+        const savedDisplay = document.getElementById('money-saved');
+        const leftDisplay = document.getElementById('money-left');
+        const progressBar = document.getElementById('finance-progress-bar');
+        const percentDisplay = document.getElementById('finance-percent');
+        
+        const GOAL = 20000;
+        // Referência no Firebase: finance/deposits
+        const financeRef = ref(db, 'finance/deposits');
+        
+        // Dados locais (index: boolean)
+        let paidIndices = {};
+
+        // 1. Gera o Grid
+        // Usamos FIXED_VALUES para garantir que seja igual para os dois
+        const valuesList = FIXED_VALUES; 
+
+        // 2. Ouve o Firebase
+        onValue(financeRef, (snapshot) => {
+            paidIndices = snapshot.val() || {};
+            renderGrid();
+            updateTotals();
+        });
+
+        function updateTotals() {
+            let totalSaved = 0;
+            // Soma apenas os índices que estão marcados como true
+            Object.keys(paidIndices).forEach(index => {
+                if (paidIndices[index]) {
+                    totalSaved += valuesList[index];
+                }
+            });
+
+            let totalLeft = GOAL - totalSaved;
+            let percent = (totalSaved / GOAL) * 100;
+
+            // Formata para moeda Real
+            savedDisplay.textContent = totalSaved.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            leftDisplay.textContent = totalLeft.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            
+            // Atualiza barra
+            progressBar.style.width = `${percent}%`;
+            percentDisplay.textContent = `${percent.toFixed(1)}% Concluído`;
+
+            // Efeito visual de completou
+            if (totalSaved >= GOAL) {
+                percentDisplay.textContent = "🎉 META BATIDA! PARABÉNS! 🎉";
+                percentDisplay.style.color = "#2ecc71";
+                percentDisplay.style.fontWeight = "bold";
+            }
+        }
+
+        function renderGrid() {
+            gridContainer.innerHTML = '';
+            valuesList.forEach((val, index) => {
+                const item = document.createElement('div');
+                item.className = 'finance-item';
+                
+                // Marca se estiver pago
+                if (paidIndices[index]) item.classList.add('paid');
+
+                item.innerHTML = `<small>R$</small><span>${val}</span>`;
+
+                item.addEventListener('click', () => {
+                    const isPaid = !!paidIndices[index];
+                    
+                    // Clona o estado atual e inverte o clicado
+                    const newIndices = {...paidIndices};
+                    
+                    if (isPaid) {
+                        delete newIndices[index]; // Remove pagamento
+                    } else {
+                        newIndices[index] = true; // Adiciona pagamento
+                    }
+
+                    // Salva no Firebase
+                    set(financeRef, newIndices);
+                });
+
+                gridContainer.appendChild(item);
+            });
+        }
+    }
+
+    // --- TRACKER BÍBLIA ---
     function initBibleTracker() {
         const booksCountEl = document.getElementById('books-count');
         const cyclesCountEl = document.getElementById('cycles-count');
@@ -162,18 +271,15 @@ document.addEventListener('DOMContentLoaded', () => {
             "1 João", "2 João", "3 João", "Judas", "Apocalipse"
         ];
 
-        // Variáveis locais (serão atualizadas pela nuvem)
         let savedProgress = {};
         let completionCount = 0;
 
-        // 1. OUVIR A NUVEM (Lê os dados e atualiza a tela sempre que algo muda)
         const progressRef = ref(db, 'bible/progress');
         const completionRef = ref(db, 'bible/completions');
 
         onValue(progressRef, (snapshot) => {
-            savedProgress = snapshot.val() || {}; // Se vier vazio, cria objeto vazio
+            savedProgress = snapshot.val() || {}; 
             updateStats();
-            // Re-renderiza os livros para atualizar os vistos
             renderBooks(oldTestament, 'ot-books');
             renderBooks(newTestament, 'nt-books');
         });
@@ -188,7 +294,6 @@ document.addEventListener('DOMContentLoaded', () => {
             booksCountEl.textContent = `${currentCount} / ${TOTAL_BOOKS}`;
             cyclesCountEl.textContent = `${completionCount}`;
             
-            // Verifica se completou dentro da atualização
             if (currentCount === TOTAL_BOOKS) {
                 setTimeout(() => {
                     handleCompletion();
@@ -196,13 +301,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Função que lida com o "Reset" ao completar
         function handleCompletion() {
-            // Só executa se tiver livros marcados (para evitar loop infinito)
             if (Object.keys(savedProgress).length > 0) {
                 alert(`Parabéns! Vocês completaram a leitura de toda a Bíblia juntos! ❤️\n\nEsta foi a leitura nº ${completionCount + 1}.\n\nO progresso será reiniciado para a próxima jornada!`);
-                
-                // Atualiza na Nuvem (Isso vai disparar o onValue de novo e limpar a tela)
                 set(completionRef, completionCount + 1);
                 set(progressRef, {}); 
             }
@@ -214,38 +315,26 @@ document.addEventListener('DOMContentLoaded', () => {
             bookList.forEach(book => {
                 const btn = document.createElement('div');
                 btn.className = 'book-item';
-                
-                // Verifica se está marcado (baseado nos dados da nuvem)
                 if (savedProgress[book]) btn.classList.add('read');
-                
                 btn.innerHTML = `<span>${book}</span> <span class="check-icon">✓</span>`;
-                
                 btn.addEventListener('click', () => {
-                    // Lógica de alternar
                     const isRead = !!savedProgress[book];
-                    
+                    const newProgress = {...savedProgress};
                     if (isRead) {
-                        // Se já leu, remove da lista
-                        const newProgress = {...savedProgress};
                         delete newProgress[book];
-                        set(progressRef, newProgress); // Envia para a nuvem
                     } else {
-                        // Se não leu, adiciona
-                        const newProgress = {...savedProgress};
                         newProgress[book] = true;
-                        set(progressRef, newProgress); // Envia para a nuvem
                     }
+                    set(progressRef, newProgress);
                 });
                 container.appendChild(btn);
             });
         }
-        
-        // Render inicial (vazio até os dados chegarem da nuvem)
         renderBooks(oldTestament, 'ot-books');
         renderBooks(newTestament, 'nt-books');
     }
 
-    // --- INICIALIZAÇÃO ---
+    // --- INIT ---
     function init() {
         createCarousel();
         
@@ -253,12 +342,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const now = new Date();
             const diffNamoro = diffMonthsDays(START_DATE, now);
             dateCounter.textContent = `${diffNamoro.months} meses e ${diffNamoro.days} dias de nós.`;
-            
             const diffConheceram = diffMonthsDays(MEETING_DATE, now);
             meetCounter.textContent = `${diffConheceram.months} meses e ${diffConheceram.days} dias de história.`;
-            
             const diffBiblia = diffMonthsDays(BIBLE_START_DATE, now);
-            bibleCounter.textContent = `${diffBiblia.months} meses e ${diffBiblia.days} dias de leitura.`;
+            bibleCounter.textContent = `${diffBiblia.months} meses e ${diffBiblia.days} dias de leitura da Bíblia.`;
         };
         
         updateDate(); 
@@ -270,12 +357,12 @@ document.addEventListener('DOMContentLoaded', () => {
         nextBtn.addEventListener('click', () => { nextSlide(); resetAutoplay(); });
         prevBtn.addEventListener('click', () => { prevSlide(); resetAutoplay(); });
 
-        initBibleTracker(); // Inicia o tracker com Firebase
+        initBibleTracker();
+        initFinanceTracker(); // INICIA O NOVO TRACKER FINANCEIRO
 
         const audioBtn = document.getElementById('audio-control');
         const audioPlayer = document.getElementById('bg-music');
         let isMuted = false;
-
         if(audioBtn && audioPlayer) {
             audioBtn.addEventListener('click', () => {
                 isMuted = !isMuted;
@@ -286,6 +373,48 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     audioBtn.textContent = '🔊';
                     audioBtn.style.opacity = '1';
+                }
+            });
+        }
+
+        const envelope = document.getElementById('envelope');
+        const typedTextContainer = document.getElementById('typed-text');
+        const signature = document.getElementById('signature');
+        const fullLetterText = `É meu anjo... (SEU TEXTO AQUI)...`; // Lembre de colocar seu texto da carta
+        
+        let hasOpened = false;
+        function typeWriter(text, element, speed = 30) {
+            let i = 0;
+            function removeCursor() {
+                const style = document.createElement('style');
+                style.innerHTML = '.typewriter-body::after { display: none; }';
+                document.head.appendChild(style);
+            }
+            function type() {
+                if (i < text.length) {
+                    if (text.charAt(i) === '\n') {
+                        element.innerHTML += '<br>';
+                    } else {
+                        element.innerHTML += text.charAt(i);
+                    }
+                    i++;
+                    setTimeout(type, speed); 
+                } else {
+                    removeCursor();
+                    signature.style.transition = "opacity 2s";
+                    signature.style.opacity = "1";
+                }
+            }
+            type();
+        }
+        if(envelope) {
+            envelope.addEventListener('click', () => {
+                if (!hasOpened) {
+                    hasOpened = true;
+                    envelope.classList.add('open');
+                    setTimeout(() => {
+                        typeWriter(fullLetterText, typedTextContainer, 30); 
+                    }, 800);
                 }
             });
         }
