@@ -1,5 +1,5 @@
 ````markdown
-# Uma Surpresa Para Você ❤️
+# Uma Surpresa Para Você 
 
 Um projeto web personalizado, romântico e interativo, criado para celebrar momentos especiais, acompanhar a leitura bíblica em casal e registrar a contagem do tempo juntos.
 
