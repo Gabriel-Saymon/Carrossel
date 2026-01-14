@@ -331,3 +331,114 @@ h2 {
     .book-item { font-size: 0.65rem; padding: 0.4rem; justify-content: center; }
     .book-item .check-icon { display: none; }
 }
+
+/* --- CARROSSEL DE CARTAS --- */
+
+.letter-carousel-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    position: relative;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+/* Ajuste no papel para comportar o carrossel */
+.letter-paper {
+    /* Mantém o estilo original */
+    background-color: rgba(240, 240, 240, 0.05);
+    padding: 2rem 1.5rem;
+    border-radius: 8px;
+    border: 1px solid rgba(192, 178, 131, 0.2);
+    /* Ajustes para o carrossel */
+    width: 100%;
+    min-height: 400px; /* Altura mínima para não pular */
+    position: relative;
+    overflow: hidden; /* Garante que a animação não vaze */
+    transition: height 0.3s ease; /* Anima se a altura do texto mudar */
+}
+
+/* Cada Slide de Carta */
+.letter-slide {
+    display: none; /* Esconde por padrão */
+    animation: fadeEffect 0.8s; /* Efeito de aparecer */
+    text-align: left;
+}
+
+.letter-slide.active {
+    display: block; /* Mostra a ativa */
+}
+
+/* Animação de Fade */
+@keyframes fadeEffect {
+    from {opacity: 0; transform: translateY(10px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+/* Botões de Navegação das Cartas */
+.letter-nav-btn {
+    background: transparent;
+    border: none;
+    color: var(--accent); /* Dourado */
+    font-size: 3rem;
+    cursor: pointer;
+    transition: transform 0.2s, opacity 0.2s;
+    padding: 0 10px;
+    user-select: none;
+    z-index: 5;
+}
+
+.letter-nav-btn:hover {
+    transform: scale(1.2);
+    text-shadow: 0 0 10px rgba(192, 178, 131, 0.5);
+}
+
+.letter-nav-btn:active {
+    transform: scale(0.9);
+}
+
+/* Indicadores (Bolinhas) das Cartas */
+.letter-dots-container {
+    text-align: center;
+    margin-top: 1rem;
+    margin-bottom: 3rem;
+}
+
+.letter-dot {
+    height: 10px;
+    width: 10px;
+    margin: 0 5px;
+    background-color: rgba(192, 178, 131, 0.3);
+    border-radius: 50%;
+    display: inline-block;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.letter-dot.active {
+    background-color: var(--accent);
+    transform: scale(1.2);
+}
+
+/* Responsividade para celular */
+@media (max-width: 600px) {
+    .letter-carousel-wrapper {
+        gap: 0;
+    }
+    .letter-nav-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0,0,0,0.3); /* Fundo escuro para ver em cima do papel */
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    #letter-prev { left: -10px; }
+    #letter-next { right: -10px; }
+}
