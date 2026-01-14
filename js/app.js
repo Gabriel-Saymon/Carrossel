@@ -75,6 +75,70 @@ document.addEventListener('DOMContentLoaded', () => {
         { src: 'assets/img-22.jpeg', alt: 'Foto 22', caption: 'Primeiro Natal juntos.' },
     ];
 
+   // --- CARTAS (NOVO ARRAY) ---
+    // Adicione quantas cartas quiser aqui!
+    const LETTERS_DATA = [
+        {
+            date: "15 de abril de 2025",
+            content: `
+                <p>Ei, meu bem! Espero que essa seja a primeira de muitas cartas. Em um dia tão especial quanto hoje, gostaria de fazer algo muito especial também.. é simples por ser uma carta, mas com certeza de muito valor.</p>
+                <p>Não preciso nem dizer sobre o quão especial é e está sendo esse processo de me aproximar de você… você sem dúvida foi um presente dos céus em minha vida. Vejo em você uma mulher forte, determinada, carinhosa, dedicada e linda… Poderia dedicar diversos outros adjetivos no que se referem a você, mas deixo esses por enquanto para que nas próximas oportunidades venha utilizar os demais.</p>
+                <p>Muito obrigado por ser quem você é dia após dia! Muito obrigado pelas orações, preocupações e conselhos. Não tenho palavras pra descrever o quão você é importante para mim. </p>
+                <p>Não tenho dúvidas sobre o que você é, e naquilo que vejo em você na minha jornada. Quero que saiba que estarei sempre ao seu lado e celebraremos cada vitória e conquista juntos, bem como lutas e dificuldades.</p>
+                <p>Hoje estarei conhecendo seus pais e em breve você estará “conhecendo” os meus… e assim vamos seguindo, passo a passo para vivermos um belo propósito. Saiba que você é amada, e cada dia que passa, farei o possível para que você veja e sinta isso.</p>
+            `,
+            signature: "Seu Preto 🤍"
+        },
+        {
+            date: "16 de Maio de 2025",
+            content: `
+                <p>Enfim, nosso primeiro mês! Na verdade, não sei o quanto vou escrever nesta mensagem… vou apenas expor um pouco daquilo que penso, sinto e vivo ao seu lado. Caso não esteja escrito à mão, me desculpe! Cê sabe que minha letra não é formosa e tão pouco legível rs.</p>
+                <p>A verdade é que nesse primeiro mês de namoro o que me vem em mente é um sentimento de gratidão. Gratidão a Deus por ter colocado em minha vida uma pessoa tão incrível! Uma mulher de fato preciosa. Que se mostra cada vez mais companheira, amiga, auxiliadora, cuidadosa, amorosa e por aí vai…</p>
+                <p>Obrigado por me aconselhar, obrigado por me apoiar e obrigado por escolher me amar. Amo te amar, e sou tão feliz por estar com você! Você tem alegrado meus dias e me inspirado a ser um homem melhor.</p>
+                <p>Desde que você chegou tenho me dedicado mais, me esforçado mais, buscando ser um filho melhor e tentando ser o melhor namorado possível dentro daquilo posso nas atuais condições. Hoje eu vejo, que ainda em pouco tempo existe um Gabriel antes e um Gabriel depois da Rhaiza. E sigo firme em cumprir nossa promessa, no qual se for para mudar, que seja para melhor.</p>
+                <p>Espero que essa data se repita mais e mais vezes. Espero ter mais momentos ao teu lado, sejam bons ou ruins… te apoiando, te impulsionando e chorando com você se necessário, bem como nos alegrando nos momentos de vitória, alegria e bonança. Espero continuar ouvindo o quanto você se sente cuidada, amada e protegida.. pra eu continuar a ver e saber que não estou falhando com homem. Espero que juntos venhamos crescer em graça e em conhecimento, buscando a Deus cada vez mais e fazendo com Ele seja o centro do nosso relacionamento… hoje terminamos de ler um livro da Bíblia juntos, mas em breve estaremos concluindo toda ela. E assim, vivermos um propósito e fazer com que Ele seja conhecido através de nós!</p>
+                <p>Que venhamos desfrutar de mais dias 15, muito mais… além de desfrutar 2, 5, 8, 10 meses.. e pela graça e vontade de Deus, uma vida toda!</p>
+                <p>Te amo, Rhaiza!!!</p>
+            `,
+            signature: "Seu Preto 🤍"
+        },
+        {
+            date: "15 de Outubro de 2025",
+            content: `
+                <p>Como prometido, mais uma carta na qual eu espero ser muitas. Diga-se de passagem que eu já planejava te escrever antes mesmo que você viesse a cobrar… tava esperando chegar ao nosso sexto mês como namorados para lhe dedicar mais uma carta.</p>
+                <p>Posso dizer que de certo modo é um pouco difícil colocar em palavras como em um formato de carta tendo em vista o fato de sempre lhe dizer o quão especial e fundamental você é na minha vida.</p>
+                <p>Posso afirmar que essas não são como palavras repetidas ditas de maneira recorrente! Cada vez que eu digo que te amo, pode ter certeza que estou dizendo com mais amor do que na vez anterior. Cada vez que digo que você é especial é que de fato você tem se tornado mais especial ainda do que as demais vezes ditas. E assim vai em todas as declarações nas quais eu dedico a ti.</p>
+                <p>Desfrutar desse tempo ao seu lado tem sido a melhor experiência da minha vida. Nesses meus 23 anos ainda tenho dúvidas sobre minha carreira profissional, incertezas sobre o futuro acadêmico ou até mesmo em coisas relacionadas a isso… mas em apenas 6 meses sei que a escolha mais importante da minha vida já foi tomada e escolhida, e essa escolha é você e passar o resto dos meus dias com você!</p>
+                <p>Só tenho a agradecer! Encontrei muito mais que um tesouro… encontrei um propósito! Encontrei um amor! Encontrei uma parceira! Encontrei a minha família! Você é a mulher dos meus sonhos e minha futura mulher se assim Deus permitir. Você, meu amor.. é a prova viva de que os realmente os planos de Deus são melhores que os nossos. Pois, no que para os homens é uma história improvável e rara, de certo modo impossível até de acreditar que aconteceu como aconteceu, se tornou o capítulo história mais linda de um homem que não é merecedor de tanto. E por isso me faltam palavras para agradecer a Deus por ter sido tão bom para alguém como eu, me dando a chance de ter alguém como você. Te amo!</p>
+            `,
+            signature: "Seu Preto 🤍"
+        },
+        {
+            date: "20 de Novembro de 2025",
+            content: `
+                <p>É meu anjo, cá estou eu para colocar um pouco em palavras tudo aquilo que estamos vivendo, sonhando e até mesmo um pouco daquilo que você representa para mim.</p>
+                <p>Sem dúvida a cada dia que passa me impressiono mais com você… costumo dizer que existe um Gabriel antes e depois da Rhaiza, mas é possível observar que a recíproca é verdadeira! Pois o que antes era incrível a cada dia tem se melhorado mais ainda.</p>
+                <p>Ver todo cuidado e carinho que você tem por mim, se importar em saber o que pode melhorar, fazer tanto por amor e ainda ser tudo que você é… confesso que às vezes me pergunto se mereço isso tudo. Porque olha, você é muito mais do que eu pedi ou sonhei…</p>
+                <p>Por isso oro tanto e peço a Deus que me dê sabedoria, mansidão e me ensine todo necessário para que eu possa cuidar tão bem do tesouro que Ele está confiando a mim!</p>
+                <p>Obrigado por trazer alegria e significado aos meus dias! Você me faz querer ser um homem melhor todos os dias… não para que eu conquiste muitas coisas para mim, mas para que eu conquiste muitas coisas por você! Eu te amo mais do que ontem e menos que amanhã.</p>
+            `,
+            signature: "Seu Preto 🤍"
+        },
+        {
+            date: "10 de Janeiro de 2026",
+            content: `
+                <p>Estava pensando em como seria mais uma carta para minha gatinha!! A verdade é que vai ser algo que tenho aprendido com o Senhor a cada dia que passa e algo que tem ressoado cada vez mais ao meu coração.</p>
+                <p>É bem verdade que tudo que virei a dizer já é do seu conhecimento… mas quando paro para olhar e sondar tudo quanto já passamos nesses últimos meses, eu posso dizer que me transborda gratidão.</p>
+                <p>Tenho aprendido muito com você, sei que já disse isso mas é um fato que tenho muuuito a melhorar! Eu realmente queria que você tivesse a oportunidade de ver o quão incrível você é aos meus olhos!! E o quão isso me motiva a ser um homem melhor por/para você.</p>
+                <p>Sou muito grato por ter você ao meu lado. Uma mulher forte, mas também sensível.. uma mulher decidida, mas que deposita confiança em minhas decisões, uma mulher centrada e séria nos momentos devidos, mas engraçada e extrovertida nos mesmo… e por aí vai!!</p>
+                <p>Passamos por diversos momentos e fases.. a cada dia nos conhecendo mais e aprendendo mais um com outro… mas com certeza se amando mais e com mais convicção do queremos viver e desfrutar. Superando assim cada adversidade e desafio que vem surgindo.</p>
+                <p>Então de verdade, obrigado por me escolher e obrigado por ser o amor da minha vida! Te amo e luto por você dia após dia! E pode apostar que isso é uma promessa.</p>
+            `,
+            signature: "Seu Preto 🤍"
+        }
+        
+    ];
+
     // --- DOM REFERENCES ---
     const slidesContainer = document.getElementById('slides');
     const captionText = document.getElementById('caption-text');
@@ -85,12 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextBtn = document.getElementById('next');
     const dotsContainer = document.getElementById('dots');
 
-    let currentIndex = 0;
-    let autoplayInterval;
-    let autoplayTimeout;
-    let isPausedByUser = false;
-
-    // --- FUNÇÕES ---
+    // --- FUNÇÕES GERAIS ---
     function diffMonthsDays(startDate, endDate) {
         let months = (endDate.getFullYear() - startDate.getFullYear()) * 12;
         months -= startDate.getMonth();
@@ -106,7 +165,12 @@ document.addEventListener('DOMContentLoaded', () => {
         return { months: Math.max(0, months), days };
     }
 
-    // --- CARROSSEL ---
+    // --- LÓGICA DO CARROSSEL DE FOTOS ---
+    let currentIndex = 0;
+    let autoplayInterval;
+    let autoplayTimeout;
+    let isPausedByUser = false;
+
     function goToSlide(index) {
         const slides = document.querySelectorAll('.slide');
         const dots = document.querySelectorAll('.dot');
@@ -165,7 +229,79 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- TRACKER FINANCEIRO (NOVO) ---
+    // --- CARROSSEL DE CARTAS (NOVA FUNÇÃO) ---
+    function initLetterCarousel() {
+        const track = document.getElementById('letter-track');
+        const btnPrev = document.getElementById('letter-prev');
+        const btnNext = document.getElementById('letter-next');
+        const dotsContainer = document.getElementById('letter-dots');
+        let currentLetterIdx = 0;
+
+        // 1. Gerar HTML das Cartas
+        LETTERS_DATA.forEach((letter, index) => {
+            // Cria o slide da carta
+            const letterDiv = document.createElement('div');
+            letterDiv.className = 'letter-slide';
+            if (index === 0) letterDiv.classList.add('active'); // Primeira carta visível
+
+            letterDiv.innerHTML = `
+                <p class="letter-date">${letter.date}</p>
+                <div class="letter-body">${letter.content}</div>
+                <p class="signature">${letter.signature}</p>
+            `;
+            track.appendChild(letterDiv);
+
+            // Cria a bolinha indicadora
+            const dot = document.createElement('span');
+            dot.className = 'letter-dot';
+            if (index === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => showLetter(index));
+            dotsContainer.appendChild(dot);
+        });
+
+        // 2. Função para mostrar carta
+        function showLetter(index) {
+            const slides = document.querySelectorAll('.letter-slide');
+            const dots = document.querySelectorAll('.letter-dot');
+            
+            // Loop infinito
+            if (index >= slides.length) index = 0;
+            if (index < 0) index = slides.length - 1;
+
+            currentLetterIdx = index;
+
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+
+            slides[currentLetterIdx].classList.add('active');
+            dots[currentLetterIdx].classList.add('active');
+        }
+
+        // 3. Botões
+        btnNext.addEventListener('click', () => showLetter(currentLetterIdx + 1));
+        btnPrev.addEventListener('click', () => showLetter(currentLetterIdx - 1));
+
+        // 4. Swipe (Arrastar na tela)
+        let touchStartX = 0;
+        const letterPaper = document.querySelector('.letter-paper');
+        
+        letterPaper.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        letterPaper.addEventListener('touchend', (e) => {
+            const touchEndX = e.changedTouches[0].screenX;
+            const diff = touchEndX - touchStartX;
+
+            // Se arrastou mais de 50px
+            if (Math.abs(diff) > 50) {
+                if (diff < 0) showLetter(currentLetterIdx + 1); // Arrastou para esquerda -> Próximo
+                else showLetter(currentLetterIdx - 1); // Arrastou para direita -> Anterior
+            }
+        });
+    }
+
+    // --- TRACKER FINANCEIRO ---
     function initFinanceTracker() {
         const gridContainer = document.getElementById('finance-grid');
         const savedDisplay = document.getElementById('money-saved');
@@ -174,17 +310,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const percentDisplay = document.getElementById('finance-percent');
         
         const GOAL = 20000;
-        // Referência no Firebase: finance/deposits
         const financeRef = ref(db, 'finance/deposits');
         
-        // Dados locais (index: boolean)
         let paidIndices = {};
-
-        // 1. Gera o Grid
-        // Usamos FIXED_VALUES para garantir que seja igual para os dois
         const valuesList = FIXED_VALUES; 
 
-        // 2. Ouve o Firebase
         onValue(financeRef, (snapshot) => {
             paidIndices = snapshot.val() || {};
             renderGrid();
@@ -193,25 +323,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function updateTotals() {
             let totalSaved = 0;
-            // Soma apenas os índices que estão marcados como true
             Object.keys(paidIndices).forEach(index => {
-                if (paidIndices[index]) {
-                    totalSaved += valuesList[index];
-                }
+                if (paidIndices[index]) totalSaved += valuesList[index];
             });
 
             let totalLeft = GOAL - totalSaved;
             let percent = (totalSaved / GOAL) * 100;
 
-            // Formata para moeda Real
             savedDisplay.textContent = totalSaved.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             leftDisplay.textContent = totalLeft.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             
-            // Atualiza barra
             progressBar.style.width = `${percent}%`;
             percentDisplay.textContent = `${percent.toFixed(1)}% Concluído`;
 
-            // Efeito visual de completou
             if (totalSaved >= GOAL) {
                 percentDisplay.textContent = "🎉 META BATIDA! PARABÉNS! 🎉";
                 percentDisplay.style.color = "#2ecc71";
@@ -224,28 +348,15 @@ document.addEventListener('DOMContentLoaded', () => {
             valuesList.forEach((val, index) => {
                 const item = document.createElement('div');
                 item.className = 'finance-item';
-                
-                // Marca se estiver pago
                 if (paidIndices[index]) item.classList.add('paid');
-
                 item.innerHTML = `<small>R$</small><span>${val}</span>`;
-
                 item.addEventListener('click', () => {
                     const isPaid = !!paidIndices[index];
-                    
-                    // Clona o estado atual e inverte o clicado
                     const newIndices = {...paidIndices};
-                    
-                    if (isPaid) {
-                        delete newIndices[index]; // Remove pagamento
-                    } else {
-                        newIndices[index] = true; // Adiciona pagamento
-                    }
-
-                    // Salva no Firebase
+                    if (isPaid) delete newIndices[index];
+                    else newIndices[index] = true;
                     set(financeRef, newIndices);
                 });
-
                 gridContainer.appendChild(item);
             });
         }
@@ -293,11 +404,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const currentCount = Object.keys(savedProgress).length;
             booksCountEl.textContent = `${currentCount} / ${TOTAL_BOOKS}`;
             cyclesCountEl.textContent = `${completionCount}`;
-            
             if (currentCount === TOTAL_BOOKS) {
-                setTimeout(() => {
-                    handleCompletion();
-                }, 500);
+                setTimeout(() => { handleCompletion(); }, 500);
             }
         }
 
@@ -320,11 +428,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 btn.addEventListener('click', () => {
                     const isRead = !!savedProgress[book];
                     const newProgress = {...savedProgress};
-                    if (isRead) {
-                        delete newProgress[book];
-                    } else {
-                        newProgress[book] = true;
-                    }
+                    if (isRead) delete newProgress[book];
+                    else newProgress[book] = true;
                     set(progressRef, newProgress);
                 });
                 container.appendChild(btn);
@@ -334,7 +439,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderBooks(newTestament, 'nt-books');
     }
 
-    // --- INIT ---
+    // --- INIT GERAL ---
     function init() {
         createCarousel();
         
@@ -358,7 +463,8 @@ document.addEventListener('DOMContentLoaded', () => {
         prevBtn.addEventListener('click', () => { prevSlide(); resetAutoplay(); });
 
         initBibleTracker();
-        initFinanceTracker(); // INICIA O NOVO TRACKER FINANCEIRO
+        initFinanceTracker(); 
+        initLetterCarousel(); // INICIA AS CARTAS
 
         const audioBtn = document.getElementById('audio-control');
         const audioPlayer = document.getElementById('bg-music');
@@ -373,48 +479,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     audioBtn.textContent = '🔊';
                     audioBtn.style.opacity = '1';
-                }
-            });
-        }
-
-        const envelope = document.getElementById('envelope');
-        const typedTextContainer = document.getElementById('typed-text');
-        const signature = document.getElementById('signature');
-        const fullLetterText = `É meu anjo... (SEU TEXTO AQUI)...`; // Lembre de colocar seu texto da carta
-        
-        let hasOpened = false;
-        function typeWriter(text, element, speed = 30) {
-            let i = 0;
-            function removeCursor() {
-                const style = document.createElement('style');
-                style.innerHTML = '.typewriter-body::after { display: none; }';
-                document.head.appendChild(style);
-            }
-            function type() {
-                if (i < text.length) {
-                    if (text.charAt(i) === '\n') {
-                        element.innerHTML += '<br>';
-                    } else {
-                        element.innerHTML += text.charAt(i);
-                    }
-                    i++;
-                    setTimeout(type, speed); 
-                } else {
-                    removeCursor();
-                    signature.style.transition = "opacity 2s";
-                    signature.style.opacity = "1";
-                }
-            }
-            type();
-        }
-        if(envelope) {
-            envelope.addEventListener('click', () => {
-                if (!hasOpened) {
-                    hasOpened = true;
-                    envelope.classList.add('open');
-                    setTimeout(() => {
-                        typeWriter(fullLetterText, typedTextContainer, 30); 
-                    }, 800);
                 }
             });
         }
