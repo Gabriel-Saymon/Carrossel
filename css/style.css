@@ -580,9 +580,9 @@ h2 {
 /* --- VISUAL DE PAPEL (Leitura da Carta) --- */
 /* Estilo específico para quando a carta está aberta */
 .modal-content.paper-content {
-    background-color: #fdfbf7 !important; /* Cor creme garantida */
+    background-color: #fdfbf7 !important;
     background-image: linear-gradient(#fdfbf7 1px, transparent 1px);
-    background-size: 100% 1.8rem;
+    background-size: 100% 1.9rem; /* Linhas levemente mais espaçadas */
     color: #2c3e50 !important;
     border: none;
     border-radius: 2px;
@@ -590,81 +590,89 @@ h2 {
     padding: 0;
     max-width: 650px;
     width: 90%;
+    height: 80vh; /* Altura fixa para o papel */
     position: relative;
-    overflow: hidden;
+    display: flex;       /* IMPORTANTE: Transforma em Flexbox */
+    flex-direction: column; /* Organiza itens em coluna (Botão em cima, texto embaixo) */
 }
 
-/* Botão Voltar (Estilo Selo) */
+/* Botão Voltar (Agora é um cabeçalho, não sobrepõe mais) */
 #close-read-btn {
-    position: absolute;
-    top: 15px;
-    left: 15px;
+    position: relative; /* Mudado de absolute para relative */
+    top: auto;
+    left: auto;
+    display: table; /* Ajuda a centralizar */
+    margin: 1.5rem auto 0.5rem auto; /* Margem: Cima, Dir, Baixo (empurra texto), Esq */
     z-index: 20;
+    
     background: transparent;
     color: #8b7d52 !important;
     border: 1px solid #8b7d52;
-    padding: 5px 12px;
-    border-radius: 4px;
+    padding: 5px 20px;
+    border-radius: 20px;
     font-family: var(--font-body);
     font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
     transition: all 0.3s;
     cursor: pointer;
     font-weight: bold;
-    display: inline-block; 
+    flex-shrink: 0; /* Garante que o botão não amasse */
 }
 
-#close-read-btn:hover { background: #8b7d52; color: #fdfbf7 !important; }
+#close-read-btn:hover { 
+    background: #8b7d52; 
+    color: #fdfbf7 !important; 
+}
 
-/* Área de Texto da Carta */
+/* Área de Texto da Carta (O que rola) */
 .letter-paper.full-view {
-    max-height: 75vh;
-    overflow-y: auto;
+    flex-grow: 1; /* Ocupa todo o espaço restante */
+    overflow-y: auto; /* Só o texto rola, o botão fica parado no topo */
     margin-top: 0;
-    padding: 4rem 2.5rem 2rem 2.5rem; /* Margens generosas */
+    padding: 1rem 2rem 3rem 2rem; /* Margens internas ajustadas */
     
     /* Scrollbar */
     scrollbar-width: thin; 
-    scrollbar-color: #c0b283 #fdfbf7; 
+    scrollbar-color: #c0b283 transparent; 
 }
 
-.letter-paper.full-view::-webkit-scrollbar { width: 6px; }
-.letter-paper.full-view::-webkit-scrollbar-track { background: #fdfbf7; }
+/* Ajustes da barra de rolagem */
+.letter-paper.full-view::-webkit-scrollbar { width: 4px; }
+.letter-paper.full-view::-webkit-scrollbar-track { background: transparent; }
 .letter-paper.full-view::-webkit-scrollbar-thumb { background-color: #c0b283; border-radius: 10px; }
 
-/* Tipografia dentro do Papel */
+/* Tipografia */
 .modal-content.paper-content .letter-body p {
-    color: #1a1a1a !important; /* Texto escuro */
+    color: #1a1a1a !important;
     font-family: var(--font-handwriting);
-    font-size: 1.6rem;
-    line-height: 1.8;
+    font-size: 1.5rem; /* Tamanho confortável para mobile */
+    line-height: 1.6; /* Altura da linha ajustada para as linhas do caderno */
     margin-bottom: 1.5rem;
-    text-align: justify !important; /* Texto Justificado */
+    text-align: justify !important;
     text-justify: inter-word;
     font-weight: 500;
 }
 
 .modal-content.paper-content .letter-date {
-    font-size: 0.9rem; 
-    color: #555 !important;
-    text-align: right; 
-    margin-bottom: 2rem; 
+    font-size: 0.8rem; 
+    color: #666 !important;
+    text-align: center; /* Data centralizada fica mais elegante no mobile */
+    margin-bottom: 1.5rem; 
     text-transform: uppercase; 
     letter-spacing: 1px;
-    border-bottom: 2px solid rgba(192, 178, 131, 0.4); 
     padding-bottom: 0.5rem;
-    float: right; 
-    clear: both;
     width: 100%;
+    display: block;
 }
 
 .modal-content.paper-content .signature {
-    margin-top: 3rem; 
+    margin-top: 2rem; 
     font-weight: 700; 
     color: #c0b283 !important; 
-    text-align: right !important;
-    font-size: 1.4rem;
+    text-align: center !important; /* Assinatura centralizada */
+    font-size: 1.3rem;
+    padding-bottom: 2rem;
 }
 
 
