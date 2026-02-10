@@ -1,8 +1,8 @@
-// js/app.js - Versão Sincronizada (Firebase)
+// js/app.js - Versão Sincronizada (Firebase) + Toggle Histórico
 
 // Importa as funções do Firebase diretamente da nuvem
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+import { getDatabase, ref, set, push, remove, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
 // --- CONFIGURAÇÃO DO FIREBASE ---
 // 1. Vai à consola do Firebase > Definições do Projeto > Geral > As suas aplicações
@@ -30,29 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const BIBLE_START_DATE = new Date('2025-05-05T00:00:00'); 
     
     const AUTOPLAY_INTERVAL_MS = 5000;
-    // --- GRID FINANCEIRO (Soma total: R$ 20.000) ---
-    // Distribuição: Max R$ 200. Total de 160 caixinhas.
-    // Ordem fixa misturada para garantir sincronia visual entre os dispositivos.
-    const FIXED_VALUES = [
-        200, 50, 100, 200, 50, 150, 100, 200, 50, 100,
-        200, 100, 50, 200, 150, 100, 200, 50, 100, 200,
-        50, 100, 200, 50, 150, 200, 100, 50, 200, 100,
-        150, 200, 50, 100, 200, 50, 100, 200, 150, 50,
-        100, 200, 50, 100, 200, 50, 150, 200, 100, 50,
-        200, 100, 200, 50, 100, 200, 150, 50, 100, 200,
-        50, 100, 200, 50, 200, 100, 50, 150, 200, 100,
-        200, 50, 100, 200, 50, 100, 200, 150, 50, 100,
-        200, 50, 100, 200, 50, 200, 100, 150, 50, 200,
-        100, 50, 200, 50, 100, 200, 150, 50, 100, 200,
-        50, 100, 200, 50, 200, 100, 150, 50, 200, 100,
-        200, 50, 100, 200, 50, 100, 200, 150, 50, 100,
-        200, 50, 100, 200, 50, 200, 100, 150, 50, 200,
-        100, 50, 200, 50, 100, 200, 150, 50, 100, 200,
-        50, 100, 200, 50, 200, 100, 150, 50, 200, 100,
-        200, 50, 100, 200, 50, 100, 200, 150, 50, 100
-    ];
-    // Se quiser usar a ordem fixa, use FIXED_VALUES no lugar de CHALLENGE_VALUES
-
+    
     // --- SLIDES ---
     const SLIDES_DATA = [
         { src: 'assets/img-1.jpeg', alt: 'Foto 1', caption: 'Primeiro treino como namorados.' },
@@ -303,62 +281,133 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- TRACKER FINANCEIRO ---
     function initFinanceTracker() {
-        const gridContainer = document.getElementById('finance-grid');
         const savedDisplay = document.getElementById('money-saved');
         const leftDisplay = document.getElementById('money-left');
         const progressBar = document.getElementById('finance-progress-bar');
         const percentDisplay = document.getElementById('finance-percent');
+        const inputField = document.getElementById('finance-input');
+        const addBtn = document.getElementById('finance-add-btn');
+        const historyList = document.getElementById('finance-history-list');
+        // Referência ao novo botão de toggle
+        const toggleBtn = document.getElementById('toggle-history-btn');
         
         const GOAL = 20000;
-        const financeRef = ref(db, 'finance/deposits');
         
-        let paidIndices = {};
-        const valuesList = FIXED_VALUES; 
+        // Agora salvamos uma LISTA de transações, não mais índices fixos
+        const transactionsRef = ref(db, 'finance/transactions');
+        
+        // Lógica do botão Ocultar/Mostrar
+        if(toggleBtn && historyList) {
+            toggleBtn.addEventListener('click', () => {
+                historyList.classList.toggle('hidden');
+                
+                if (historyList.classList.contains('hidden')) {
+                    toggleBtn.textContent = 'Mostrar';
+                } else {
+                    toggleBtn.textContent = 'Ocultar';
+                }
+            });
+        }
+        
+        // 1. Função de Adicionar
+        addBtn.addEventListener('click', () => {
+            const value = parseFloat(inputField.value);
+            
+            if (!value || value <= 0) {
+                alert("Digite um valor válido maior que zero!");
+                return;
+            }
 
-        onValue(financeRef, (snapshot) => {
-            paidIndices = snapshot.val() || {};
-            renderGrid();
-            updateTotals();
+            // Cria o objeto da transação
+            const newTransaction = {
+                amount: value,
+                date: new Date().toISOString(), // Data atual para ordenar
+                timestamp: Date.now()
+            };
+
+            // Envia para o Firebase (push cria uma chave única automática)
+            push(transactionsRef, newTransaction)
+                .then(() => {
+                    inputField.value = ''; // Limpa o campo
+                    // Feedback visual (opcional)
+                })
+                .catch((error) => alert("Erro ao salvar: " + error.message));
         });
 
-        function updateTotals() {
+        // 2. Ouve alterações e atualiza a tela
+        onValue(transactionsRef, (snapshot) => {
+            const data = snapshot.val();
             let totalSaved = 0;
-            Object.keys(paidIndices).forEach(index => {
-                if (paidIndices[index]) totalSaved += valuesList[index];
-            });
+            historyList.innerHTML = ''; // Limpa lista para recriar
 
-            let totalLeft = GOAL - totalSaved;
-            let percent = (totalSaved / GOAL) * 100;
+            if (data) {
+                // Converte objeto do Firebase em Array para poder ordenar
+                const transactionsArray = Object.entries(data).map(([key, value]) => {
+                    return { id: key, ...value };
+                });
 
-            savedDisplay.textContent = totalSaved.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                // Ordena: Mais recentes primeiro
+                transactionsArray.sort((a, b) => b.timestamp - a.timestamp);
+
+                transactionsArray.forEach(item => {
+                    totalSaved += item.amount;
+                    addHistoryItem(item);
+                });
+            }
+
+            updateStats(totalSaved);
+        });
+
+        function updateStats(total) {
+            let totalLeft = GOAL - total;
+            // Evita número negativo se passar da meta
+            if (totalLeft < 0) totalLeft = 0;
+            
+            let percent = (total / GOAL) * 100;
+            if (percent > 100) percent = 100;
+
+            savedDisplay.textContent = total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             leftDisplay.textContent = totalLeft.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             
             progressBar.style.width = `${percent}%`;
             percentDisplay.textContent = `${percent.toFixed(1)}% Concluído`;
 
-            if (totalSaved >= GOAL) {
+            if (total >= GOAL) {
                 percentDisplay.textContent = "🎉 META BATIDA! PARABÉNS! 🎉";
                 percentDisplay.style.color = "#2ecc71";
                 percentDisplay.style.fontWeight = "bold";
+            } else {
+                percentDisplay.style.color = "var(--text-secondary)";
+                percentDisplay.style.fontWeight = "normal";
             }
         }
 
-        function renderGrid() {
-            gridContainer.innerHTML = '';
-            valuesList.forEach((val, index) => {
-                const item = document.createElement('div');
-                item.className = 'finance-item';
-                if (paidIndices[index]) item.classList.add('paid');
-                item.innerHTML = `<small>R$</small><span>${val}</span>`;
-                item.addEventListener('click', () => {
-                    const isPaid = !!paidIndices[index];
-                    const newIndices = {...paidIndices};
-                    if (isPaid) delete newIndices[index];
-                    else newIndices[index] = true;
-                    set(financeRef, newIndices);
-                });
-                gridContainer.appendChild(item);
+        function addHistoryItem(item) {
+            const li = document.createElement('li');
+            li.className = 'history-item';
+            
+            const dateObj = new Date(item.date);
+            const dateStr = dateObj.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+
+            li.innerHTML = `
+                <div class="history-info">
+                    <span class="history-amount">+ ${item.amount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+                    <span class="history-date">${dateStr}</span>
+                </div>
+                <button class="delete-btn" title="Apagar">🗑️</button>
+            `;
+
+            // Botão de deletar
+            const deleteBtn = li.querySelector('.delete-btn');
+            deleteBtn.addEventListener('click', () => {
+                if(confirm(`Tem certeza que quer apagar o depósito de R$ ${item.amount}?`)) {
+                    // Remove do Firebase usando a ID única
+                    const itemRef = ref(db, `finance/transactions/${item.id}`);
+                    remove(itemRef);
+                }
             });
+
+            historyList.appendChild(li);
         }
     }
 
