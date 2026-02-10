@@ -743,7 +743,12 @@ h2 {
 
 /* Media Queries */
 @media (max-width: 768px) {
-    body { padding: 1.5rem 0.5rem; }
+    body { 
+        /* Mantém o espaçamento lateral pequeno, mas devolve o espaço no fundo */
+        padding: 1.5rem 0.5rem; 
+        padding-bottom: 8rem; /* AUMENTADO: Garante o "rodapé" vazio no celular */
+    }
+
     .carousel, #slides-wrapper { border-radius: 8px; }
     .legend { font-size: 1.6rem; }
     .carousel-btn { font-size: 2rem; width: 40px; }
