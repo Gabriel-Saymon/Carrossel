@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
             LETTERS_DATA.forEach((letter, index) => {
                 const btn = document.createElement('button');
                 btn.className = 'letter-option-btn';
-                btn.innerHTML = `<span>Carta de:</span> <strong>${letter.date}</strong>`;
+                btn.innerHTML = `<strong>${letter.date}</strong>`;
                 
                 btn.addEventListener('click', () => {
                     openLetter(index);
