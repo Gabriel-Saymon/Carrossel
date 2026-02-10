@@ -1,13 +1,9 @@
-// js/app.js - Versão Sincronizada (Firebase) + Toggle Histórico
+// js/app.js - Versão com Envelope e Modais
 
-// Importa as funções do Firebase diretamente da nuvem
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getDatabase, ref, set, push, remove, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
 // --- CONFIGURAÇÃO DO FIREBASE ---
-// 1. Vai à consola do Firebase > Definições do Projeto > Geral > As suas aplicações
-// 2. Copia o conteúdo de "const firebaseConfig = { ... }" e COLA ABAIXO substituindo este bloco:
-
 const firebaseConfig = {
   apiKey: "AIzaSyDeYBvzUntv1mB6Kxi9T6hz52MeWP_0DFg",
   authDomain: "nossahistoria-e51b5.firebaseapp.com",
@@ -18,7 +14,6 @@ const firebaseConfig = {
   appId: "1:123554417708:web:c200a1ad87663037e79589"
 };
 
-// Inicializa o Banco de Dados
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
@@ -28,9 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const START_DATE = new Date('2025-04-15T00:00:00'); 
     const MEETING_DATE = new Date('2025-03-18T00:00:00');   
     const BIBLE_START_DATE = new Date('2025-05-05T00:00:00'); 
-    
     const AUTOPLAY_INTERVAL_MS = 5000;
-    
+
     // --- SLIDES ---
     const SLIDES_DATA = [
         { src: 'assets/img-1.jpeg', alt: 'Foto 1', caption: 'Primeiro treino como namorados.' },
@@ -53,8 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { src: 'assets/img-22.jpeg', alt: 'Foto 22', caption: 'Primeiro Natal juntos.' },
     ];
 
-   // --- CARTAS (NOVO ARRAY) ---
-    // Adicione quantas cartas quiser aqui!
+   // --- CARTAS ---
     const LETTERS_DATA = [
         {
             date: "15 de abril de 2025",
@@ -207,76 +200,76 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- CARROSSEL DE CARTAS (NOVA FUNÇÃO) ---
-    function initLetterCarousel() {
-        const track = document.getElementById('letter-track');
-        const btnPrev = document.getElementById('letter-prev');
-        const btnNext = document.getElementById('letter-next');
-        const dotsContainer = document.getElementById('letter-dots');
-        let currentLetterIdx = 0;
+    // --- NOVO SISTEMA DE CARTAS (ENVELOPE) ---
+    function initLetterSystem() {
+        const envelopeTrigger = document.getElementById('envelope-trigger');
+        const menuModal = document.getElementById('letter-menu-modal');
+        const readModal = document.getElementById('letter-read-modal');
+        const closeMenuBtn = document.getElementById('close-menu-btn');
+        const closeReadBtn = document.getElementById('close-read-btn');
+        const lettersList = document.getElementById('letters-list');
+        
+        // Elementos do Modal de Leitura
+        const modalDate = document.getElementById('modal-date');
+        const modalBody = document.getElementById('modal-body');
+        const modalSignature = document.getElementById('modal-signature');
 
-        // 1. Gerar HTML das Cartas
-        LETTERS_DATA.forEach((letter, index) => {
-            // Cria o slide da carta
-            const letterDiv = document.createElement('div');
-            letterDiv.className = 'letter-slide';
-            if (index === 0) letterDiv.classList.add('active'); // Primeira carta visível
-
-            letterDiv.innerHTML = `
-                <p class="letter-date">${letter.date}</p>
-                <div class="letter-body">${letter.content}</div>
-                <p class="signature">${letter.signature}</p>
-            `;
-            track.appendChild(letterDiv);
-
-            // Cria a bolinha indicadora
-            const dot = document.createElement('span');
-            dot.className = 'letter-dot';
-            if (index === 0) dot.classList.add('active');
-            dot.addEventListener('click', () => showLetter(index));
-            dotsContainer.appendChild(dot);
+        // 1. Abrir Menu ao clicar no Envelope
+        envelopeTrigger.addEventListener('click', () => {
+            renderLetterMenu();
+            openModal(menuModal);
         });
 
-        // 2. Função para mostrar carta
-        function showLetter(index) {
-            const slides = document.querySelectorAll('.letter-slide');
-            const dots = document.querySelectorAll('.letter-dot');
-            
-            // Loop infinito
-            if (index >= slides.length) index = 0;
-            if (index < 0) index = slides.length - 1;
+        // 2. Fechar Menu
+        closeMenuBtn.addEventListener('click', () => closeModal(menuModal));
 
-            currentLetterIdx = index;
+        // 3. Voltar da Carta para o Menu (ou Fechar tudo)
+        closeReadBtn.addEventListener('click', () => {
+            closeModal(readModal);
+            // Opcional: Reabrir o menu se quiser que volte para a lista
+            openModal(menuModal);
+        });
 
-            slides.forEach(slide => slide.classList.remove('active'));
-            dots.forEach(dot => dot.classList.remove('active'));
+        // Função Auxiliar: Renderizar a Lista de Datas
+        function renderLetterMenu() {
+            lettersList.innerHTML = ''; // Limpa
+            LETTERS_DATA.forEach((letter, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'letter-option-btn';
+                btn.innerHTML = `<span>Carta de:</span> <strong>${letter.date}</strong>`;
+                
+                btn.addEventListener('click', () => {
+                    openLetter(index);
+                });
 
-            slides[currentLetterIdx].classList.add('active');
-            dots[currentLetterIdx].classList.add('active');
+                lettersList.appendChild(btn);
+            });
         }
 
-        // 3. Botões
-        btnNext.addEventListener('click', () => showLetter(currentLetterIdx + 1));
-        btnPrev.addEventListener('click', () => showLetter(currentLetterIdx - 1));
+        // Função Auxiliar: Abrir uma carta específica
+        function openLetter(index) {
+            const letter = LETTERS_DATA[index];
+            
+            // Preenche os dados
+            modalDate.textContent = letter.date;
+            modalBody.innerHTML = letter.content;
+            modalSignature.textContent = letter.signature;
 
-        // 4. Swipe (Arrastar na tela)
-        let touchStartX = 0;
-        const letterPaper = document.querySelector('.letter-paper');
-        
-        letterPaper.addEventListener('touchstart', (e) => {
-            touchStartX = e.changedTouches[0].screenX;
-        }, { passive: true });
+            // Troca os modais (Fecha menu, abre leitura)
+            closeModal(menuModal);
+            openModal(readModal);
+        }
 
-        letterPaper.addEventListener('touchend', (e) => {
-            const touchEndX = e.changedTouches[0].screenX;
-            const diff = touchEndX - touchStartX;
+        function openModal(modal) {
+            modal.classList.remove('hidden'); // Mostra
+            // Pequeno delay para animação de opacidade funcionar
+            setTimeout(() => { modal.style.opacity = '1'; }, 10);
+        }
 
-            // Se arrastou mais de 50px
-            if (Math.abs(diff) > 50) {
-                if (diff < 0) showLetter(currentLetterIdx + 1); // Arrastou para esquerda -> Próximo
-                else showLetter(currentLetterIdx - 1); // Arrastou para direita -> Anterior
-            }
-        });
+        function closeModal(modal) {
+            modal.style.opacity = '0';
+            setTimeout(() => { modal.classList.add('hidden'); }, 500); // Espera animação
+        }
     }
 
     // --- TRACKER FINANCEIRO ---
@@ -288,15 +281,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const inputField = document.getElementById('finance-input');
         const addBtn = document.getElementById('finance-add-btn');
         const historyList = document.getElementById('finance-history-list');
-        // Referência ao novo botão de toggle
         const toggleBtn = document.getElementById('toggle-history-btn');
         
         const GOAL = 20000;
-        
-        // Agora salvamos uma LISTA de transações, não mais índices fixos
         const transactionsRef = ref(db, 'finance/transactions');
         
-        // Lógica do botão Ocultar/Mostrar
         if(toggleBtn && historyList) {
             toggleBtn.addEventListener('click', () => {
                 historyList.classList.toggle('hidden');
@@ -309,44 +298,31 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
         
-        // 1. Função de Adicionar
         addBtn.addEventListener('click', () => {
             const value = parseFloat(inputField.value);
-            
             if (!value || value <= 0) {
                 alert("Digite um valor válido maior que zero!");
                 return;
             }
-
-            // Cria o objeto da transação
             const newTransaction = {
                 amount: value,
-                date: new Date().toISOString(), // Data atual para ordenar
+                date: new Date().toISOString(),
                 timestamp: Date.now()
             };
-
-            // Envia para o Firebase (push cria uma chave única automática)
             push(transactionsRef, newTransaction)
-                .then(() => {
-                    inputField.value = ''; // Limpa o campo
-                    // Feedback visual (opcional)
-                })
+                .then(() => { inputField.value = ''; })
                 .catch((error) => alert("Erro ao salvar: " + error.message));
         });
 
-        // 2. Ouve alterações e atualiza a tela
         onValue(transactionsRef, (snapshot) => {
             const data = snapshot.val();
             let totalSaved = 0;
-            historyList.innerHTML = ''; // Limpa lista para recriar
+            historyList.innerHTML = '';
 
             if (data) {
-                // Converte objeto do Firebase em Array para poder ordenar
                 const transactionsArray = Object.entries(data).map(([key, value]) => {
                     return { id: key, ...value };
                 });
-
-                // Ordena: Mais recentes primeiro
                 transactionsArray.sort((a, b) => b.timestamp - a.timestamp);
 
                 transactionsArray.forEach(item => {
@@ -354,15 +330,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     addHistoryItem(item);
                 });
             }
-
             updateStats(totalSaved);
         });
 
         function updateStats(total) {
             let totalLeft = GOAL - total;
-            // Evita número negativo se passar da meta
             if (totalLeft < 0) totalLeft = 0;
-            
             let percent = (total / GOAL) * 100;
             if (percent > 100) percent = 100;
 
@@ -373,7 +346,7 @@ document.addEventListener('DOMContentLoaded', () => {
             percentDisplay.textContent = `${percent.toFixed(1)}% Concluído`;
 
             if (total >= GOAL) {
-                percentDisplay.textContent = "🎉 META BATIDA! PARABÉNS! 🎉";
+                percentDisplay.textContent = "🎉 META BATIDA! 🎉";
                 percentDisplay.style.color = "#2ecc71";
                 percentDisplay.style.fontWeight = "bold";
             } else {
@@ -385,7 +358,6 @@ document.addEventListener('DOMContentLoaded', () => {
         function addHistoryItem(item) {
             const li = document.createElement('li');
             li.className = 'history-item';
-            
             const dateObj = new Date(item.date);
             const dateStr = dateObj.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
 
@@ -396,17 +368,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <button class="delete-btn" title="Apagar">🗑️</button>
             `;
-
-            // Botão de deletar
             const deleteBtn = li.querySelector('.delete-btn');
             deleteBtn.addEventListener('click', () => {
                 if(confirm(`Tem certeza que quer apagar o depósito de R$ ${item.amount}?`)) {
-                    // Remove do Firebase usando a ID única
                     const itemRef = ref(db, `finance/transactions/${item.id}`);
                     remove(itemRef);
                 }
             });
-
             historyList.appendChild(li);
         }
     }
@@ -417,19 +385,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const cyclesCountEl = document.getElementById('cycles-count');
         const TOTAL_BOOKS = 66; 
 
-        const oldTestament = [
-            "Gênesis", "Êxodo", "Levítico", "Números", "Deuteronômio", "Josué", "Juízes", "Rute", 
-            "1 Samuel", "2 Samuel", "1 Reis", "2 Reis", "1 Crônicas", "2 Crônicas", "Esdras", "Neemias", "Ester",
-            "Jó", "Salmos", "Provérbios", "Eclesiastes", "Cânticos", "Isaías", "Jeremias", "Lamentações", 
-            "Ezequiel", "Daniel", "Oseias", "Joel", "Amós", "Obadias", "Jonas", "Miqueias", "Naum", 
-            "Habacuque", "Sofonias", "Ageu", "Zacarias", "Malaquias"
-        ];
-        const newTestament = [
-            "Mateus", "Marcos", "Lucas", "João", "Atos", "Romanos", "1 Coríntios", "2 Coríntios", 
-            "Gálatas", "Efésios", "Filipenses", "Colossenses", "1 Tessalonicenses", "2 Tessalonicenses", 
-            "1 Timóteo", "2 Timóteo", "Tito", "Filemom", "Hebreus", "Tiago", "1 Pedro", "2 Pedro", 
-            "1 João", "2 João", "3 João", "Judas", "Apocalipse"
-        ];
+        const oldTestament = ["Gênesis", "Êxodo", "Levítico", "Números", "Deuteronômio", "Josué", "Juízes", "Rute", "1 Samuel", "2 Samuel", "1 Reis", "2 Reis", "1 Crônicas", "2 Crônicas", "Esdras", "Neemias", "Ester", "Jó", "Salmos", "Provérbios", "Eclesiastes", "Cânticos", "Isaías", "Jeremias", "Lamentações", "Ezequiel", "Daniel", "Oseias", "Joel", "Amós", "Obadias", "Jonas", "Miqueias", "Naum", "Habacuque", "Sofonias", "Ageu", "Zacarias", "Malaquias"];
+        const newTestament = ["Mateus", "Marcos", "Lucas", "João", "Atos", "Romanos", "1 Coríntios", "2 Coríntios", "Gálatas", "Efésios", "Filipenses", "Colossenses", "1 Tessalonicenses", "2 Tessalonicenses", "1 Timóteo", "2 Timóteo", "Tito", "Filemom", "Hebreus", "Tiago", "1 Pedro", "2 Pedro", "1 João", "2 João", "3 João", "Judas", "Apocalipse"];
 
         let savedProgress = {};
         let completionCount = 0;
@@ -513,7 +470,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         initBibleTracker();
         initFinanceTracker(); 
-        initLetterCarousel(); // INICIA AS CARTAS
+        initLetterSystem(); // INICIA O NOVO SISTEMA
 
         const audioBtn = document.getElementById('audio-control');
         const audioPlayer = document.getElementById('bg-music');
