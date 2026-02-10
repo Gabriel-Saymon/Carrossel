@@ -499,7 +499,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 desc: "Depois de tanto tempo"
             },
             {
-                coords: [-20.43318, -40.03515], 
+                coords: [-20.43318, -41.03515], 
                 title: "Ida a Domingos Martins",
                 desc: "Uma das fotos mais bonitas que temos"
             }
