@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { src: 'assets/img-20.jpeg', alt: 'Foto 20', caption: 'Seu primeiro aniversário juntos.', focus: '50% 20%' },
         { src: 'assets/img-21.jpeg', alt: 'Foto 21', caption: 'Meu primeiro aniversário juntos.' },
         { src: 'assets/img-22.jpeg', alt: 'Foto 22', caption: 'Primeiro Natal juntos.' },
+        { src: 'assets/img-23.jpeg', alt: 'Foto 23', caption: 'Servindo juntos.' },
     ];
 
    // --- CARTAS ---
