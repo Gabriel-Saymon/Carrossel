@@ -753,3 +753,40 @@ h2 {
     .book-item { font-size: 0.65rem; padding: 0.4rem; justify-content: center; }
     .book-item .check-icon { display: none; }
 }
+
+/* --- MAPA DE LUGARES --- */
+#map-container {
+    width: 100%;
+    height: 400px; /* Altura do mapa */
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 2rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    border: 1px solid rgba(192, 178, 131, 0.2); /* Borda sutil dourada */
+    z-index: 1; /* Garante que fique abaixo dos modais */
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+}
+
+/* Customização do Popup (Balãozinho) para ficar Dark/Dourado */
+.leaflet-popup-content-wrapper, .leaflet-popup-tip {
+    background: #1a1a1a;
+    color: #f0f0f0;
+    border: 1px solid #c0b283;
+}
+
+.leaflet-popup-content h3 {
+    color: #c0b283;
+    font-family: 'Playfair Display', serif;
+    margin: 0 0 5px 0;
+    font-size: 1.1rem;
+}
+
+.leaflet-popup-content p {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    margin: 0;
+}
