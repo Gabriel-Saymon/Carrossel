@@ -497,6 +497,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 coords: [-20.19336, -40.19048], 
                 title: "Primeira praia juntos",
                 desc: "Depois de tanto tempo"
+            },
+            {
+                coords: [-20.43318, -40.03515], 
+                title: "Ida a Domingos Martins",
+                desc: "Uma das fotos mais bonitas que temos"
             }
         ];
 
