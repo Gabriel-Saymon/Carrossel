@@ -417,7 +417,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function handleCompletion() {
             if (Object.keys(savedProgress).length > 0) {
-                alert(`Parabéns! Vocês completaram a leitura de toda a Bíblia juntos! ❤️\n\nEsta foi a leitura nº ${completionCount + 1}.\n\nO progresso será reiniciado para a próxima jornada!`);
+                alert(`Completamos a leitura de toda a Bíblia juntos! ❤\n\nEsta foi a leitura nº ${completionCount + 1}.\n\nRumo a mais uma!`);
                 set(completionRef, completionCount + 1);
                 set(progressRef, {}); 
             }
@@ -443,6 +443,66 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         renderBooks(oldTestament, 'ot-books');
         renderBooks(newTestament, 'nt-books');
+    }
+
+    // --- MAPA DOS LUGARES ---
+    function initMap() {
+        // 1. Defina o ponto central
+        // Dica: Pegue essas coordenadas no Google Maps clicando com botão direito no local
+        const center = [-20.19245, -40.23604]; 
+        
+        const map = L.map('map').setView(center, 12); 
+
+        // 2. VISUAL DE MAPA CLÁSSICO (OpenStreetMap Padrão)
+        // Substituí o 'Dark Matter' por este aqui que é o visual tradicional
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        // 3. Ícone Personalizado
+        const customIcon = L.icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        });
+
+        // 4. Lista de Lugares
+        const places = [
+            {
+                coords: [-20.192753, -40.243153], 
+                title: "Onde nos conhecemos",
+                desc: "O dia que minha vida mudou."
+            },
+            {
+                coords: [-20.19315, -40.22920], 
+                title: "Primeiro Encontro",
+                desc: "Lembra do nervosismo?"
+            },
+            {
+                coords: [-20.31800, -40.80541], 
+                title: "Primeira Viagem juntos",
+                desc: "Friozinho baum de Paraju"
+            },
+            {
+                coords: [-19.85184, -40.97980], 
+                title: "Segunda viagem juntos",
+                desc: "Muitas comilanças em BH"
+            },
+            {
+                coords: [-20.19336, -40.19048], 
+                title: "Primeira praia juntos",
+                desc: "Depois de tanto tempo"
+            }
+        ];
+
+        places.forEach(place => {
+            L.marker(place.coords, { icon: customIcon }).addTo(map)
+                .bindPopup(`<h3>${place.title}</h3><p>${place.desc}</p>`);
+        });
     }
 
     // --- INIT GERAL ---
@@ -471,6 +531,8 @@ document.addEventListener('DOMContentLoaded', () => {
         initBibleTracker();
         initFinanceTracker(); 
         initLetterSystem(); // INICIA O NOVO SISTEMA
+
+        initMap();
 
         const audioBtn = document.getElementById('audio-control');
         const audioPlayer = document.getElementById('bg-music');
