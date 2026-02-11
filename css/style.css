@@ -34,7 +34,7 @@ body {
     
     /* Áreas seguras do iPhone + Espaço Extra para o Botão de Volume */
     padding: 2rem 1rem;
-    padding-top: env(safe-area-inset-top, 2rem); 
+    padding-top: 1rem; /* Um espaçamento padrão já é suficiente agora */ 
     
     /* MUDOU AQUI: De 2rem para 6rem (aprox. 90px de espaço livre no fim) */
     padding-bottom: 6rem; /* Garante que o botão de áudio não cubra nada */
