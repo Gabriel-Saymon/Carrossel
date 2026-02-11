@@ -54,6 +54,7 @@ body {
     align-items: center;
     z-index: 9999;
     padding: 1rem;
+    padding-top: max(2rem, env(safe-area-inset-top));
 }
 
 .overlay-content {
