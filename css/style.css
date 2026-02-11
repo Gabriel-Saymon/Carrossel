@@ -950,3 +950,124 @@ h2 {
     font-size: 0.85rem;
     margin: 0;
 }
+
+/* --- MURAL DE RECADOS (POST-ITS) --- */
+.notes-section {
+    padding-bottom: 2rem;
+}
+
+.notes-board {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    border: 1px dashed rgba(192, 178, 131, 0.3);
+    min-height: 200px;
+    margin-bottom: 1.5rem;
+}
+
+.empty-message {
+    color: var(--text-secondary);
+    font-style: italic;
+    align-self: center;
+}
+
+/* O Post-it Individual */
+.note-card {
+    width: 140px;
+    height: 140px;
+    padding: 15px;
+    background-color: #fef68a; /* Cor padrão */
+    color: #333; /* Texto escuro para contraste */
+    font-family: var(--font-handwriting); /* Fonte de mão */
+    font-size: 1.2rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-shadow: 2px 4px 6px rgba(0,0,0,0.3);
+    position: relative;
+    transition: transform 0.2s;
+    overflow: hidden;
+    cursor: grab;
+}
+
+.note-card:hover {
+    transform: scale(1.1) !important;
+    z-index: 10;
+    box-shadow: 5px 10px 15px rgba(0,0,0,0.4);
+}
+
+/* Efeito "Bagunçado" (Gira um para cada lado) */
+.note-card:nth-child(odd) { transform: rotate(-3deg); }
+.note-card:nth-child(even) { transform: rotate(3deg); }
+.note-card:nth-child(3n) { transform: rotate(-1deg); }
+
+/* Botão de Excluir (xzinho) */
+.delete-note-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: transparent;
+    border: none;
+    color: rgba(0,0,0,0.4);
+    font-size: 1rem;
+    cursor: pointer;
+    font-family: sans-serif;
+    padding: 2px 5px;
+}
+.delete-note-btn:hover { color: #d32f2f; }
+
+/* Controles de Entrada */
+.notes-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+#note-input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--accent);
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    text-align: center;
+    outline: none;
+}
+
+.color-options {
+    display: flex;
+    gap: 10px;
+}
+
+.color-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: transform 0.2s;
+}
+
+.color-btn:hover { transform: scale(1.1); }
+.color-btn.selected { border-color: #fff; box-shadow: 0 0 10px var(--accent); }
+
+#add-note-btn {
+    background: var(--accent);
+    color: #000;
+    border: none;
+    padding: 10px 30px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
