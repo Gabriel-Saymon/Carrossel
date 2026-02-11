@@ -489,7 +489,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 desc: "Friozinho baum de Paraju"
             },
             {
-                coords: [-19.85184, -40.97980], 
+                coords: [-19.85184, -43.97980], 
                 title: "Segunda viagem juntos",
                 desc: "Muitas comilanças em BH"
             },
