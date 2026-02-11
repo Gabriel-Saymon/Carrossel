@@ -44,6 +44,160 @@ body {
     background-attachment: fixed;
 }
 
+/* --- TELA DE INÍCIO (JUKEBOX AJUSTADA) --- */
+#overlay {
+    position: fixed; 
+    inset: 0; 
+    background: linear-gradient(135deg, #0f0f0f, #000); /* Fundo bem escuro */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    padding: 1rem;
+}
+
+.overlay-content {
+    width: 100%;
+    max-width: 450px;
+    height: 85vh; /* AUMENTADO: Ocupa 85% da altura da tela para espalhar os itens */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Empurra título p/ cima e botão p/ baixo */
+    text-align: center;
+    animation: fadeIn 0.8s ease;
+}
+
+/* Área do Título (Topo) */
+.header-area {
+    margin-top: 1rem;
+}
+
+#overlay h1 {
+    font-family: var(--font-title);
+    color: var(--accent);
+    font-size: 2.2rem;
+    margin-bottom: 0.2rem;
+}
+
+.overlay-subtitle {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.8;
+}
+
+/* Container da Lista ("A Box") */
+.music-list-vertical {
+    flex-grow: 1; /* Ocupa todo o espaço disponível no meio */
+    margin: 2rem 0; /* Afasta do título e do botão */
+    overflow-y: auto; /* Rolagem interna */
+    
+    /* Estilo de "Caixa" */
+    background: rgba(255, 255, 255, 0.03); /* Fundo super sutil */
+    border: 1px solid rgba(255, 255, 255, 0.08); /* Borda fina */
+    border-radius: 16px;
+    padding: 15px;
+    
+    /* Scrollbar estilizada */
+    scrollbar-width: thin;
+    scrollbar-color: #333 transparent;
+}
+
+.music-list-vertical::-webkit-scrollbar { width: 4px; }
+.music-list-vertical::-webkit-scrollbar-track { background: transparent; }
+.music-list-vertical::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
+
+/* O Retângulo da Música */
+.music-card-row {
+    display: flex;
+    align-items: center;
+    background: transparent; /* Sem fundo por padrão */
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+}
+
+.music-card-row:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Estado Selecionado (MUDANÇA AQUI) */
+.music-card-row.selected {
+    background: rgba(192, 178, 131, 0.1); /* Dourado muito transparente (apenas um brilho) */
+    border: 1px solid var(--accent); /* Borda Dourada */
+    box-shadow: 0 0 15px rgba(192, 178, 131, 0.1);
+}
+
+/* Elementos internos */
+.music-cover-small {
+    width: 45px;
+    height: 45px;
+    border-radius: 6px;
+    object-fit: cover;
+    margin-right: 15px;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+
+.music-card-row.selected .music-cover-small {
+    opacity: 1;
+}
+
+.music-info-row h3 {
+    font-size: 0.95rem;
+    color: #e0e0e0;
+    margin: 0;
+    font-weight: 500;
+}
+
+.music-info-row p {
+    font-size: 0.75rem;
+    color: #888;
+    margin: 2px 0 0 0;
+}
+
+.music-card-row.selected h3 {
+    color: var(--accent); /* Título fica dourado */
+    font-weight: 600;
+}
+
+.check-icon {
+    color: var(--accent);
+    font-size: 1.2rem;
+    margin-left: 10px;
+}
+
+/* Área do Botão (Rodapé) */
+#start-btn {
+    width: 100%;
+    max-width: 250px;
+    align-self: center; /* Centraliza o botão */
+    margin-bottom: 1rem;
+    
+    font-size: 0.9rem; 
+    letter-spacing: 3px; 
+    text-transform: uppercase; 
+    padding: 1rem 0;
+    border-radius: 50px; 
+    border: 1px solid var(--accent); 
+    background: transparent; 
+    color: var(--accent);
+    cursor: pointer; 
+    transition: all 0.4s;
+}
+
+#start-btn:hover {
+    background: var(--accent); 
+    color: #000; 
+    box-shadow: 0 0 20px rgba(192, 178, 131, 0.4); 
+    transform: scale(1.02);
+}
+
 main { width: 100%; max-width: var(--frame-max-width); text-align: center; margin: 0 auto; position: relative; z-index: 10; }
 
 /* --- HEADER --- */
