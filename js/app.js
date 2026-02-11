@@ -511,6 +511,88 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- MURAL DE RECADOS (POST-ITS) ---
+    function initNotesBoard() {
+        const board = document.getElementById('notes-board');
+        const input = document.getElementById('note-input');
+        const addBtn = document.getElementById('add-note-btn');
+        const colorBtns = document.querySelectorAll('.color-btn');
+        
+        // Referência no Firebase
+        const notesRef = ref(db, 'notes');
+        
+        let selectedColor = '#fef68a'; // Amarelo padrão
+
+        // 1. Seleção de Cor
+        colorBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove seleção visual dos outros
+                colorBtns.forEach(b => b.classList.remove('selected'));
+                // Adiciona neste
+                btn.classList.add('selected');
+                selectedColor = btn.getAttribute('data-color');
+            });
+        });
+
+        // 2. Adicionar Nota
+        addBtn.addEventListener('click', () => {
+            const text = input.value.trim();
+            
+            if (!text) {
+                alert("Escreva alguma coisa! 😊");
+                return;
+            }
+
+            // Salva no Firebase
+            push(notesRef, {
+                text: text,
+                color: selectedColor,
+                timestamp: Date.now()
+            }).then(() => {
+                input.value = ''; // Limpa o campo
+            }).catch(err => alert("Erro ao colar: " + err.message));
+        });
+
+        // 3. Ler Notas em Tempo Real
+        onValue(notesRef, (snapshot) => {
+            const data = snapshot.val();
+            board.innerHTML = ''; // Limpa o quadro para redesenhar
+
+            if (!data) {
+                board.innerHTML = '<p class="empty-message">O mural está vazio... escreva algo! 📝</p>';
+                return;
+            }
+
+            // Converte objeto em array
+            const notesList = Object.entries(data).map(([key, value]) => {
+                return { id: key, ...value };
+            });
+
+            // Cria os elementos HTML
+            notesList.forEach(note => {
+                const card = document.createElement('div');
+                card.className = 'note-card';
+                card.style.backgroundColor = note.color;
+                
+                card.innerHTML = `
+                    <span>${note.text}</span>
+                    <button class="delete-note-btn" title="Descolar">×</button>
+                `;
+
+                // Botão de excluir (pequeno x)
+                const deleteBtn = card.querySelector('.delete-note-btn');
+                deleteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Evita cliques acidentais
+                    if(confirm("Tirar esse recadinho do mural?")) {
+                        remove(ref(db, `notes/${note.id}`));
+                    }
+                });
+
+                board.appendChild(card);
+            });
+        });
+    }
+
     // --- INIT GERAL ---
     function init() {
         createCarousel();
@@ -539,6 +621,7 @@ document.addEventListener('DOMContentLoaded', () => {
         initLetterSystem(); // INICIA O NOVO SISTEMA
 
         initMap();
+        initNotesBoard();
 
         const audioBtn = document.getElementById('audio-control');
         const audioPlayer = document.getElementById('bg-music');
